@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İnteraktif Rapor: Mikroalg ile Hava Kalitesi Çözümleri</title>
-    <!-- Chosen Palette: Calm Harmony (Warm off-white, soft green, sandy beige) -->
-    <!-- Application Structure Plan: The SPA uses a thematic, non-linear structure to guide the user from the core problem (disaster-zone air pollution) to the solution (microalgae) and its broader implications. It starts with a high-level introduction, then dives into a technology comparison (interactive PBR chart), explores various applications (tabbed view with another chart), and finally covers the value-add aspects (circular economy diagram, STEM project cards) and future outlook. This structure is designed for better user exploration and understanding than a simple replication of the report's chapters, turning a dense review into an engaging narrative. A new "Live Sensor Data" section is added to read and display real-time sensor data from Firebase Firestore, transforming it into a true learning station, now including MQ135 (air quality), Light, Temperature, and Humidity sensors, replacing pH. -->
-    <!-- Visualization & Content Choices: PBRs: Goal=Compare -> Viz=Bar Chart (Chart.js) -> Interaction=Buttons to update chart/text. Justification=Interactive comparison is better than a static table. Mobile Systems: Goal=Compare -> Viz=Bar Chart (Chart.js). Justification=Visualizes relative performance. Circular Economy: Goal=Organize/Explain -> Viz=HTML/CSS Diagram. Justification=Simplifies a complex process visually. STEM Projects: Goal=Inform/Organize -> Viz=Interactive Cards. Justification=Modern, clean presentation of examples. Live Sensor Data: Goal=Inform/Monitor -> Viz=HTML/JS numerical display with dynamic text feedback, fetching data from Firebase Firestore (MQ135, Light, Temp, Humidity). Justification=Real-time data interaction for learning. All choices avoid SVG/Mermaid as required, using Canvas for charts and structured HTML/CSS for diagrams. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- Seçilen Palet: Sakin Uyum (Sıcak kirli beyaz, yumuşak yeşil, kumlu bej) -->
+    <!-- Uygulama Yapısı Planı: SPA, kullanıcıyı temel sorundan (afet bölgesindeki hava kirliliği) çözüme (mikroalgler) ve bunun daha geniş etkilerine yönlendiren tematik, doğrusal olmayan bir yapı kullanır. Yüksek seviyeli bir girişle başlar, ardından teknoloji karşılaştırmasına (interaktif FBR grafiği) dalar, çeşitli uygulamaları (başka bir grafik içeren sekmeli görünüm) keşfeder ve son olarak katma değer yönlerini (döngüsel ekonomi diyagramı, STEM proje kartları) ve gelecek görünümünü kapsar. Bu yapı, raporun bölümlerinin basit bir kopyası yerine kullanıcı keşfini ve anlamasını kolaylaştırmak için tasarlanmıştır, yoğun bir incelemeyi ilgi çekici bir anlatıya dönüştürür. Yeni bir "Canlı Sensör Verileri" bölümü, Firebase Firestore'dan gerçek zamanlı sensör verilerini okumak ve görüntülemek için eklenmiştir; şimdi MQ135 (hava kalitesi), Işık, Sıcaklık ve Nem sensörlerini içerir ve pH'ı değiştirir. Ayrıca, sensör verilerini grafiksel olarak görselleştirme ve CSV olarak dışa aktarma özellikleri eklenmiştir. -->
+    <!-- Görselleştirme ve İçerik Seçimleri: FBR'ler: Amaç=Karşılaştır -> Görselleştirme=Çubuk Grafik (Chart.js) -> Etkileşim=Grafik/metni güncellemek için düğmeler. Gerekçe=İnteraktif karşılaştırma, statik bir tablodan daha iyidir. Mobil Sistemler: Amaç=Karşılaştır -> Görselleştirme=Çubuk Grafik (Chart.js). Gerekçe=Göreceli performansı görselleştirir. Döngüsel Ekonomi: Amaç=Organize Et/Açıkla -> Görselleştirme=HTML/CSS Diyagramı. Gerekçe=Karmaşık bir süreci görsel olarak basitleştirir. STEM Projeleri: Amaç=Bilgilendir/Organize Et -> Görselleştirme=İnteraktif Kartlar. Gerekçe=Modern, temiz bir örnek sunumu. Canlı Sensör Verileri: Amaç=Bilgilendir/İzle -> Görselleştirme=Dinamik metin geri bildirimi içeren HTML/JS sayısal ekran ve Chart.js ile çizelgeler, Firebase Firestore'dan veri çekme (MQ135, Işık, Sıcaklık, Nem). Gerekçe=Öğrenme için gerçek zamanlı veri etkileşimi. Tüm seçimler SVG/Mermaid kullanımından kaçınır, çizelgeler için Canvas ve diyagramlar için yapılandırılmış HTML/CSS kullanır. -->
+    <!-- ONAYLAMA: SVG grafikleri kullanılmamıştır. Mermaid JS kullanılmamıştır. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,12 +28,12 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px;
-            max-height: 400px;
+            height: 300px; /* Sabit yükseklik, duyarlı hale getirmek için medya sorguları kullanılabilir */
+            max-height: 400px; /* Maksimum yükseklik */
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 350px;
+                height: 350px; /* Daha büyük ekranlarda biraz daha yüksek */
             }
         }
         .active-nav {
@@ -79,7 +79,10 @@
     <header class="bg-[#F8F7F4]/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <nav class="container mx-auto px-6 py-3">
             <div class="flex justify-between items-center">
-                <a href="#hero" class="text-xl font-bold font-heading text-[#656D4A]">BioAlg Çözümleri</a>
+                <a href="#hero" class="text-xl font-bold font-heading text-[#656D4A] flex items-center">
+                    <img src="https://placehold.co/40x40/E6EBE0/333D29?text=Logo" onerror="this.onerror=null; this.src='logo111.png'" alt="BioAlg Logosu" class="h-8 md:h-10 w-auto mr-2 inline-block align-middle">
+                    BioAlg Çözümleri
+                </a>
                 <div class="hidden md:flex space-x-8">
                     <a href="#problem" class="inactive-nav hover:text-[#656D4A] transition-colors">Sorun ve Çözüm</a>
                     <a href="#technology" class="inactive-nav hover:text-[#656D4A] transition-colors">Teknolojiler</a>
@@ -252,6 +255,7 @@
                         Bu bölüm, mikroalg sisteminin canlı çevresel verilerini göstermektedir. Veriler, donanımdan gelen gerçek zamanlı akışla güncellenecektir.
                     </p>
                 </div>
+                <!-- Sayısal Sensör Değerleri -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
                         <h3 class="text-xl font-bold font-heading text-[#656D4A]">CO₂ Seviyesi</h3>
@@ -271,9 +275,42 @@
                         <p id="humidity-value" class="text-4xl font-bold text-[#333D29] mt-2">-- %</p>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 text-center">
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 text-center mb-8">
                     <h3 class="text-xl font-bold font-heading text-[#333D29] mb-4">Sistem Durumu Mesajı</h3>
                     <p id="status-message" class="text-lg text-[#656D4A]">Sensör verileri yükleniyor...</p>
+                </div>
+
+                <!-- Grafiksel Sensör Verileri -->
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold font-heading text-[#333D29] mb-4">Veri Grafikleri (Son 30 Okuma)</h3>
+                    <button id="download-csv-btn" class="active-btn px-6 py-2 rounded-md font-semibold transition-colors">Verileri CSV Olarak İndir</button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                        <h4 class="text-lg font-bold font-heading text-[#656D4A] mb-4 text-center">CO₂ Seviyesi Trendi</h4>
+                        <div class="chart-container">
+                            <canvas id="co2ChartCanvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                        <h4 class="text-lg font-bold font-heading text-[#656D4A] mb-4 text-center">Hava Kalitesi (MQ135) Trendi</h4>
+                        <div class="chart-container">
+                            <canvas id="mq135ChartCanvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                        <h4 class="text-lg font-bold font-heading text-[#656D4A] mb-4 text-center">Işık Şiddeti Trendi</h4>
+                        <div class="chart-container">
+                            <canvas id="lightChartCanvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                        <h4 class="text-lg font-bold font-heading text-[#656D4A] mb-4 text-center">Sıcaklık ve Nem Trendi</h4>
+                        <div class="chart-container">
+                            <canvas id="tempHumidityChartCanvas"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -326,7 +363,7 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             
-            // Mevcut pbrData ve pbrInfo tanımlamaları...
+            // Mevcut pbrData ve pbrInfo tanımlamaları... (Bu kısım değişmedi)
             const pbrData = {
                 labels: ['CO₂ Fiksasyon Verimliliği (%)'],
                 datasets: [
@@ -464,7 +501,7 @@
                 });
             });
 
-            // STEM Project Addition Logic
+            // STEM Proje Ekleme Mantığı (Değişmedi)
             const addProjectBtn = document.getElementById('add-project-btn');
             const projectTitleInput = document.getElementById('project-title');
             const projectDescriptionInput = document.getElementById('project-description');
@@ -502,7 +539,7 @@
                 showMessage('Proje başarıyla eklendi!');
             });
 
-            // Sensor Data Display Elements
+            // Sensör Veri Görüntüleme Elemanları
             const co2ValueSpan = document.getElementById('co2-value');
             const mq135ValueSpan = document.getElementById('mq135-value');
             const lightValueSpan = document.getElementById('light-value');
@@ -523,7 +560,7 @@
                     }
 
                     if (mq135 > 200) { // MQ135 için örnek eşik (mV veya ADC değeri)
-                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
+                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') { // Mesajı tekrar etmemek için kontrol
                             message = '';
                         }
                         message += ' Hava kalitesi düşük algılandı, havalandırma kontrol edilmeli.';
@@ -565,7 +602,7 @@
                         message += ' Nem seviyesi yüksek, yoğuşma ve mantar riski olabilir.';
                     }
 
-                    if (message === '') { // If no specific issues, revert to default good message
+                    if (message === '') { // Eğer özel bir sorun yoksa, varsayılan iyi mesaja geri dön
                         message = 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.';
                     }
                 }
@@ -619,22 +656,126 @@
                 statusMessageP.innerText = "Hata: Firebase başlatılamadı. Sensör verileri yüklenemiyor.";
             }
 
-            // Firestore'dan gerçek zamanlı sensör verilerini dinleme
+            // Sensör Verisi Geçmişini Depolama ve Grafik Ayarları
+            let sensorDataHistory = [];
+            const MAX_DATA_POINTS = 30; // Grafikte gösterilecek maksimum veri noktası sayısı
+
+            // Grafik Nesneleri
+            let co2Chart, mq135Chart, lightChart, tempHumidityChart;
+
+            // Grafiklerin Başlatılması
+            function initializeCharts() {
+                const defaultChartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'category', // Zaman tabanlı etiketler için uygun
+                            title: {
+                                display: true,
+                                text: 'Zaman'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Değer'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: true },
+                        tooltip: { mode: 'index', intersect: false }
+                    }
+                };
+
+                // CO2 Grafiği
+                const co2Ctx = document.getElementById('co2ChartCanvas').getContext('2d');
+                co2Chart = new Chart(co2Ctx, {
+                    type: 'line',
+                    data: { labels: [], datasets: [{ label: 'CO₂ (ppm)', data: [], borderColor: '#656D4A', tension: 0.1, fill: false }] },
+                    options: {
+                        ...defaultChartOptions,
+                        scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'CO₂ (ppm)' } } }
+                    }
+                });
+
+                // MQ135 Hava Kalitesi Grafiği
+                const mq135Ctx = document.getElementById('mq135ChartCanvas').getContext('2d');
+                mq135Chart = new Chart(mq135Ctx, {
+                    type: 'line',
+                    data: { labels: [], datasets: [{ label: 'Hava Kalitesi (mV)', data: [], borderColor: '#B6AD90', tension: 0.1, fill: false }] },
+                    options: {
+                        ...defaultChartOptions,
+                        scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'MQ135 (mV)' } } }
+                    }
+                });
+
+                // Işık Şiddeti Grafiği
+                const lightCtx = document.getElementById('lightChartCanvas').getContext('2d');
+                lightChart = new Chart(lightCtx, {
+                    type: 'line',
+                    data: { labels: [], datasets: [{ label: 'Işık Şiddeti (lux)', data: [], borderColor: '#A2B29F', tension: 0.1, fill: false }] },
+                    options: {
+                        ...defaultChartOptions,
+                        scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'Işık (lux)' } } }
+                    }
+                });
+
+                // Sıcaklık ve Nem Grafiği
+                const tempHumidityCtx = document.getElementById('tempHumidityChartCanvas').getContext('2d');
+                tempHumidityChart = new Chart(tempHumidityCtx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [
+                            { label: 'Sıcaklık (°C)', data: [], borderColor: '#333D29', tension: 0.1, fill: false },
+                            { label: 'Nem (%)', data: [], borderColor: '#8E9B8D', tension: 0.1, fill: false }
+                        ]
+                    },
+                    options: {
+                        ...defaultChartOptions,
+                        scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'Değer' } } }
+                    }
+                });
+            }
+
+            // Firebase'den gerçek zamanlı sensör verilerini dinleme
             function listenForSensorData() {
-                // Public data (herkese açık veri) için koleksiyon yolu
-                // `artifacts/{appId}/public/data/sensors/current_data`
                 const sensorDocRef = doc(db, `artifacts/${appId}/public/data/sensors/current_data`);
 
                 onSnapshot(sensorDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
-                        // Alınan verilerle HTML elementlerini güncelle
+                        const timestamp = data.timestamp && data.timestamp.toDate ? data.timestamp.toDate() : new Date(); // Firestore Timestamp'ı JS Date'e dönüştür
+
+                        // Geçmişe yeni veri noktası ekle
+                        const newDataPoint = {
+                            timestamp: timestamp,
+                            co2: data.co2,
+                            mq135_value: data.mq135_value,
+                            light_value: data.light_value,
+                            temperature: data.temperature,
+                            humidity: data.humidity
+                        };
+                        sensorDataHistory.push(newDataPoint);
+
+                        // Performans için geçmiş boyutunu sınırla
+                        if (sensorDataHistory.length > MAX_DATA_POINTS) {
+                            sensorDataHistory.shift(); // En eski noktayı kaldır
+                        }
+
+                        // Sayısal ekranları güncelle
                         co2ValueSpan.innerText = `${data.co2 || '--'} ppm`;
-                        mq135ValueSpan.innerText = `${data.mq135_value || '--'} mV`; // MQ135 verisi
-                        lightValueSpan.innerText = `${data.light_value || '--'} lux`; // Işık verisi
+                        mq135ValueSpan.innerText = `${data.mq135_value || '--'} mV`;
+                        lightValueSpan.innerText = `${data.light_value || '--'} lux`;
                         tempValueSpan.innerText = `${data.temperature || '--'} °C`;
-                        humidityValueSpan.innerText = `${data.humidity || '--'} %`; // Nem verisi
-                        updateStatusMessage(data.co2, data.mq135_value, data.light_value, data.temperature, data.humidity); // Durum mesajını güncelle
+                        humidityValueSpan.innerText = `${data.humidity || '--'} %`;
+                        updateStatusMessage(data.co2, data.mq135_value, data.light_value, data.temperature, data.humidity);
+
+                        // Grafikleri güncelle
+                        updateCharts();
                     } else {
                         console.log("Sensör verisi bulunamadı veya henüz veri gönderilmedi!");
                         statusMessageP.innerText = "Sensör verisi bekleniyor... Lütfen Arduino'nuzdan veri göndermeyi başlatın.";
@@ -649,9 +790,83 @@
                     statusMessageP.innerText = "Hata: Sensör verileri yüklenemiyor. Konsolu kontrol edin.";
                 });
             }
+
+            // Tüm grafikleri güncelleme fonksiyonu
+            function updateCharts() {
+                const labels = sensorDataHistory.map(point => new Date(point.timestamp).toLocaleTimeString('tr-TR'));
+
+                // CO2 Grafiği güncelle
+                co2Chart.data.labels = labels;
+                co2Chart.data.datasets[0].data = sensorDataHistory.map(point => point.co2);
+                co2Chart.update();
+
+                // MQ135 Grafiği güncelle
+                mq135Chart.data.labels = labels;
+                mq135Chart.data.datasets[0].data = sensorDataHistory.map(point => point.mq135_value);
+                mq135Chart.update();
+
+                // Işık Grafiği güncelle
+                lightChart.data.labels = labels;
+                lightChart.data.datasets[0].data = sensorDataHistory.map(point => point.light_value);
+                lightChart.update();
+
+                // Sıcaklık ve Nem Grafiği güncelle
+                tempHumidityChart.data.labels = labels;
+                tempHumidityChart.data.datasets[0].data = sensorDataHistory.map(point => point.temperature);
+                tempHumidityChart.data.datasets[1].data = sensorDataHistory.map(point => point.humidity);
+                tempHumidityChart.update();
+            }
+
+            // CSV İndirme İşlevi
+            const downloadCsvBtn = document.getElementById('download-csv-btn');
+            if (downloadCsvBtn) {
+                downloadCsvBtn.addEventListener('click', exportToCsv);
+            }
+
+            function exportToCsv() {
+                if (sensorDataHistory.length === 0) {
+                    showMessage("Dışa aktarılacak veri bulunamadı.");
+                    return;
+                }
+
+                const headers = ["Timestamp", "CO2 (ppm)", "Hava Kalitesi (MQ135 mV)", "Işık (lux)", "Sıcaklık (°C)", "Nem (%)"];
+                let csvContent = headers.join(",") + "\n";
+
+                sensorDataHistory.forEach(row => {
+                    const timestamp = row.timestamp ? new Date(row.timestamp).toLocaleString('tr-TR') : '';
+                    const values = [
+                        row.co2,
+                        row.mq135_value,
+                        row.light_value,
+                        row.temperature,
+                        row.humidity
+                    ];
+                    csvContent += [timestamp, ...values].join(",") + "\n"; // Timestamp'ı da ekleyin
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                if (link.download !== undefined) { // Tarayıcı desteğini kontrol et
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', 'mikroalg_sensor_verileri.csv');
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    showMessage("Veriler CSV olarak dışa aktarıldı!");
+                } else {
+                    showMessage("Tarayıcınız CSV dışa aktarımı desteklemiyor.");
+                }
+            }
+
+            // Sayfa yüklendiğinde grafikleri başlat
+            initializeCharts();
         });
     </script>
 </body>
 </html>
+
 
 
