@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İnteraktif Rapor: Mikroalg ile Hava Kalitesi Çözümleri</title>
     <!-- Chosen Palette: Calm Harmony (Warm off-white, soft green, sandy beige) -->
-    <!-- Application Structure Plan: The SPA uses a thematic, non-linear structure to guide the user from the core problem (disaster-zone air pollution) to the solution (microalgae) and its broader implications. It starts with a high-level introduction, then dives into a technology comparison (interactive PBR chart), explores various applications (tabbed view with another chart), and finally covers the value-add aspects (circular economy diagram, STEM project cards) and future outlook. This structure is designed for better user exploration and understanding than a simple replication of the report's chapters, turning a dense review into an engaging narrative. -->
-    <!-- Visualization & Content Choices: PBRs: Goal=Compare -> Viz=Bar Chart (Chart.js) -> Interaction=Buttons to update chart/text. Justification=Interactive comparison is better than a static table. Mobile Systems: Goal=Compare -> Viz=Bar Chart (Chart.js). Justification=Visualizes relative performance. Circular Economy: Goal=Organize/Explain -> Viz=HTML/CSS Diagram. Justification=Simplifies a complex process visually. STEM Projects: Goal=Inform/Organize -> Viz=Interactive Cards. Justification=Modern, clean presentation of examples. All choices avoid SVG/Mermaid as required, using Canvas for charts and structured HTML/CSS for diagrams. -->
+    <!-- Application Structure Plan: The SPA uses a thematic, non-linear structure to guide the user from the core problem (disaster-zone air pollution) to the solution (microalgae) and its broader implications. It starts with a high-level introduction, then dives into a technology comparison (interactive PBR chart), explores various applications (tabbed view with another chart), and finally covers the value-add aspects (circular economy diagram, STEM project cards) and future outlook. This structure is designed for better user exploration and understanding than a simple replication of the report's chapters, turning a dense review into an engaging narrative. A new "Live Sensor Data" section is added to simulate real-time monitoring, enhancing the learning station aspect. -->
+    <!-- Visualization & Content Choices: PBRs: Goal=Compare -> Viz=Bar Chart (Chart.js) -> Interaction=Buttons to update chart/text. Justification=Interactive comparison is better than a static table. Mobile Systems: Goal=Compare -> Viz=Bar Chart (Chart.js). Justification=Visualizes relative performance. Circular Economy: Goal=Organize/Explain -> Viz=HTML/CSS Diagram. Justification=Simplifies a complex process visually. STEM Projects: Goal=Inform/Organize -> Viz=Interactive Cards. Justification=Modern, clean presentation of examples. Live Sensor Data: Goal=Inform/Monitor -> Viz=HTML/JS numerical display with dynamic text feedback. Justification=Simulates real-time data interaction for learning. All choices avoid SVG/Mermaid as required, using Canvas for charts and structured HTML/CSS for diagrams. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -85,6 +85,7 @@
                     <a href="#technology" class="inactive-nav hover:text-[#656D4A] transition-colors">Teknolojiler</a>
                     <a href="#applications" class="inactive-nav hover:text-[#656D4A] transition-colors">Uygulamalar</a>
                     <a href="#value" class="inactive-nav hover:text-[#656D4A] transition-colors">Katma Değer</a>
+                    <a href="#sensors" class="inactive-nav hover:text-[#656D4A] transition-colors">Sensör Verileri</a>
                     <a href="#future" class="inactive-nav hover:text-[#656D4A] transition-colors">Gelecek</a>
                 </div>
             </div>
@@ -240,6 +241,81 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <section id="sensors" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#333D29]">Canlı Sensör Verileri: Mikroalg Sistemini İzleyin</h2>
+                    <p class="mt-4 text-lg text-[#656D4A] max-w-3xl mx-auto">
+                        Bu bölüm, mikroalg sisteminin canlı (simüle edilmiş) çevresel verilerini göstermektedir. Veriler belirli aralıklarla güncellenerek sistemin durumu hakkında anlık geri bildirim sağlar.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
+                        <h3 class="text-xl font-bold font-heading text-[#656D4A]">CO₂ Seviyesi</h3>
+                        <p id="co2-value" class="text-4xl font-bold text-[#333D29] mt-2">-- ppm</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
+                        <h3 class="text-xl font-bold font-heading text-[#656D4A]">O₂ Seviyesi</h3>
+                        <p id="o2-value" class="text-4xl font-bold text-[#333D29] mt-2">-- %</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
+                        <h3 class="text-xl font-bold font-heading text-[#656D4A]">pH Değeri</h3>
+                        <p id="ph-value" class="text-4xl font-bold text-[#333D29] mt-2">--</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
+                        <h3 class="text-xl font-bold font-heading text-[#656D4A]">Su Sıcaklığı</h3>
+                        <p id="temp-value" class="text-4xl font-bold text-[#333D29] mt-2">-- °C</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 text-center">
+                    <h3 class="text-xl font-bold font-heading text-[#333D29] mb-4">Sistem Durumu Mesajı</h3>
+                    <p id="status-message" class="text-lg text-[#656D4A]">Sensör verileri yükleniyor...</p>
+                </div>
+
+                <!--
+                Gerçek zamanlı sensör verilerini aktarmak ve depolamak için bir Firebase Firestore entegrasyonu aşağıdaki gibi düşünülebilir:
+
+                1.  **Firebase Projesi Oluşturma:** Firebase konsolunda yeni bir proje oluşturun ve Firestore veritabanını etkinleştirin.
+                2.  **Web Uygulamanızı Firebase'e Bağlama:** `<head>` veya `<script>` etiketlerinde Firebase SDK'sını içe aktarın:
+                    <script type="module">
+                    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+                    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+                    // Canvas tarafından sağlanan global değişkenleri kullanın
+                    const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+                    // Firebase'i başlat
+                    const app = initializeApp(firebaseConfig);
+                    const db = getFirestore(app);
+
+                    // Firestore'dan gerçek zamanlı sensör verilerini dinleme (örneğin 'sensors' koleksiyonundaki 'current_data' belgesi)
+                    const sensorDocRef = doc(db, `artifacts/${appId}/public/data/sensors/current_data`);
+                    onSnapshot(sensorDocRef, (docSnap) => {
+                        if (docSnap.exists()) {
+                            const data = docSnap.data();
+                            // HTML elementlerini alınan verilerle güncelle
+                            document.getElementById('co2-value').innerText = `${data.co2} ppm`;
+                            document.getElementById('o2-value').innerText = `${data.o2} %`;
+                            document.getElementById('ph-value').innerText = `${data.pH}`;
+                            document.getElementById('temp-value').innerText = `${data.temperature} °C`;
+                            updateStatusMessage(data.co2, data.o2, data.pH, data.temperature); // Mevcut fonksiyonu kullan
+                        } else {
+                            console.log("Sensör verisi bulunamadı!");
+                        }
+                    }, (error) => {
+                        console.error("Firestore'dan veri çekerken hata oluştu:", error);
+                    });
+                    </script>
+
+                3.  **Sensör Tarafında Veri Gönderme:** Sensör verilerini okuyan bir mikrodenetleyici (Arduino, ESP32, Raspberry Pi vb.) bir sunucu (Node.js, Python Flask) aracılığıyla veya doğrudan Firebase SDK'sını kullanarak Firestore'a veri yazabilir. Örneğin:
+                    `await setDoc(doc(db, "artifacts", appId, "public", "data", "sensors", "current_data"), { co2: 450, o2: 21, pH: 7.5, temperature: 25, timestamp: new Date() });`
+
+                Bu entegrasyon, gerçek bir öğrenme istasyonu için verilerin sürekli olarak güncellenmesini ve etkileşimli bir deneyim sunulmasını sağlar.
+                -->
             </div>
         </section>
 
@@ -460,6 +536,61 @@
                 projectDescriptionInput.value = '';
                 showMessage('Proje başarıyla eklendi!');
             });
+
+            // Sensor Data Simulation Logic
+            const co2ValueSpan = document.getElementById('co2-value');
+            const o2ValueSpan = document.getElementById('o2-value');
+            const phValueSpan = document.getElementById('ph-value');
+            const tempValueSpan = document.getElementById('temp-value');
+            const statusMessageP = document.getElementById('status-message');
+
+            function generateSimulatedSensorData() {
+                const co2 = (Math.random() * (1000 - 350) + 350).toFixed(0); // 350-1000 ppm
+                const o2 = (Math.random() * (22 - 18) + 18).toFixed(1);     // 18-22%
+                const ph = (Math.random() * (8.5 - 6.5) + 6.5).toFixed(1);  // 6.5-8.5
+                const temp = (Math.random() * (30 - 20) + 20).toFixed(1);   // 20-30°C
+                return { co2: parseInt(co2), o2: parseFloat(o2), pH: parseFloat(ph), temperature: parseFloat(temp) };
+            }
+
+            function updateStatusMessage(co2, o2, ph, temp) {
+                let message = 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.';
+
+                if (co2 > 800) {
+                    message = 'Yüksek CO₂ seviyesi tespit edildi! Mikroalglerin fotosentezi hızlanabilir.';
+                } else if (co2 < 400) {
+                    message = 'CO₂ seviyesi düşük, fotosentez yavaşlayabilir. CO₂ takviyesi düşünülebilir.';
+                }
+
+                if (o2 < 19) {
+                    message += ' Düşük O₂ seviyesi, havalandırma kontrol edilmeli.';
+                }
+
+                if (ph < 7.0) {
+                    message += ' pH değeri asidik tarafta, alg büyümesi için optimize edilmeli.';
+                } else if (ph > 8.0) {
+                    message += ' pH değeri bazik tarafta, alg büyümesi için optimize edilmeli.';
+                }
+
+                if (temp > 28) {
+                    message += ' Su sıcaklığı yüksek, soğutma gerekli olabilir.';
+                } else if (temp < 22) {
+                    message += ' Su sıcaklığı düşük, ısıtma gerekli olabilir.';
+                }
+                statusMessageP.innerText = message;
+            }
+
+            function updateSensorDisplay() {
+                const data = generateSimulatedSensorData();
+                co2ValueSpan.innerText = `${data.co2} ppm`;
+                o2ValueSpan.innerText = `${data.o2} %`;
+                phValueSpan.innerText = `${data.pH}`;
+                tempValueSpan.innerText = `${data.temperature} °C`;
+                updateStatusMessage(data.co2, data.o2, data.pH, data.temperature);
+            }
+
+            // Update sensors every 5 seconds
+            setInterval(updateSensorDisplay, 5000);
+            updateSensorDisplay(); // Initial display
         });
     </script>
 </body>
