@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İnteraktif Rapor: Mikroalg ile Hava Kalitesi Çözümleri</title>
     <!-- Chosen Palette: Calm Harmony (Warm off-white, soft green, sandy beige) -->
-    <!-- Application Structure Plan: The SPA uses a thematic, non-linear structure to guide the user from the core problem (disaster-zone air pollution) to the solution (microalgae) and its broader implications. It starts with a high-level introduction, then dives into a technology comparison (interactive PBR chart), explores various applications (tabbed view with another chart), and finally covers the value-add aspects (circular economy diagram, STEM project cards) and future outlook. This structure is designed for better user exploration and understanding than a simple replication of the report's chapters, turning a dense review into an engaging narrative. A new "Live Sensor Data" section is added to read and display real-time sensor data from Firebase Firestore, transforming it into a true learning station. -->
-    <!-- Visualization & Content Choices: PBRs: Goal=Compare -> Viz=Bar Chart (Chart.js) -> Interaction=Buttons to update chart/text. Justification=Interactive comparison is better than a static table. Mobile Systems: Goal=Compare -> Viz=Bar Chart (Chart.js). Justification=Visualizes relative performance. Circular Economy: Goal=Organize/Explain -> Viz=HTML/CSS Diagram. Justification=Simplifies a complex process visually. STEM Projects: Goal=Inform/Organize -> Viz=Interactive Cards. Justification=Modern, clean presentation of examples. Live Sensor Data: Goal=Inform/Monitor -> Viz=HTML/JS numerical display with dynamic text feedback, fetching data from Firebase Firestore. Justification=Real-time data interaction for learning. All choices avoid SVG/Mermaid as required, using Canvas for charts and structured HTML/CSS for diagrams. -->
+    <!-- Application Structure Plan: The SPA uses a thematic, non-linear structure to guide the user from the core problem (disaster-zone air pollution) to the solution (microalgae) and its broader implications. It starts with a high-level introduction, then dives into a technology comparison (interactive PBR chart), explores various applications (tabbed view with another chart), and finally covers the value-add aspects (circular economy diagram, STEM project cards) and future outlook. This structure is designed for better user exploration and understanding than a simple replication of the report's chapters, turning a dense review into an engaging narrative. A new "Live Sensor Data" section is added to read and display real-time sensor data from Firebase Firestore, transforming it into a true learning station, now including MQ135 (air quality), Light, Temperature, and Humidity sensors, replacing pH. -->
+    <!-- Visualization & Content Choices: PBRs: Goal=Compare -> Viz=Bar Chart (Chart.js) -> Interaction=Buttons to update chart/text. Justification=Interactive comparison is better than a static table. Mobile Systems: Goal=Compare -> Viz=Bar Chart (Chart.js). Justification=Visualizes relative performance. Circular Economy: Goal=Organize/Explain -> Viz=HTML/CSS Diagram. Justification=Simplifies a complex process visually. STEM Projects: Goal=Inform/Organize -> Viz=Interactive Cards. Justification=Modern, clean presentation of examples. Live Sensor Data: Goal=Inform/Monitor -> Viz=HTML/JS numerical display with dynamic text feedback, fetching data from Firebase Firestore (MQ135, Light, Temp, Humidity). Justification=Real-time data interaction for learning. All choices avoid SVG/Mermaid as required, using Canvas for charts and structured HTML/CSS for diagrams. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -257,17 +257,18 @@
                         <h3 class="text-xl font-bold font-heading text-[#656D4A]">CO₂ Seviyesi</h3>
                         <p id="co2-value" class="text-4xl font-bold text-[#333D29] mt-2">-- ppm</p>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
-                        <h3 class="text-xl font-bold font-heading text-[#656D4A]">O₂ Seviyesi</h3>
-                        <p id="o2-value" class="text-4xl font-bold text-[#333D29] mt-2">-- %</p>
+                     <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
+                        <h3 class="text-xl font-bold font-heading text-[#656D4A]">Hava Kalitesi (MQ135)</h3>
+                        <p id="mq135-value" class="text-4xl font-bold text-[#333D29] mt-2">-- mV</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
-                        <h3 class="text-xl font-bold font-heading text-[#656D4A]">pH Değeri</h3>
-                        <p id="ph-value" class="text-4xl font-bold text-[#333D29] mt-2">--</p>
+                        <h3 class="text-xl font-bold font-heading text-[#656D4A]">Işık Şiddeti</h3>
+                        <p id="light-value" class="text-4xl font-bold text-[#333D29] mt-2">-- lux</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
-                        <h3 class="text-xl font-bold font-heading text-[#656D4A]">Su Sıcaklığı</h3>
+                        <h3 class="text-xl font-bold font-heading text-[#656D4A]">Sıcaklık ve Nem</h3>
                         <p id="temp-value" class="text-4xl font-bold text-[#333D29] mt-2">-- °C</p>
+                        <p id="humidity-value" class="text-4xl font-bold text-[#333D29] mt-2">-- %</p>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 text-center">
@@ -503,34 +504,70 @@
 
             // Sensor Data Display Elements
             const co2ValueSpan = document.getElementById('co2-value');
-            const o2ValueSpan = document.getElementById('o2-value');
-            const phValueSpan = document.getElementById('ph-value');
+            const mq135ValueSpan = document.getElementById('mq135-value');
+            const lightValueSpan = document.getElementById('light-value');
             const tempValueSpan = document.getElementById('temp-value');
+            const humidityValueSpan = document.getElementById('humidity-value');
             const statusMessageP = document.getElementById('status-message');
 
-            function updateStatusMessage(co2, o2, ph, temp) {
+            function updateStatusMessage(co2, mq135, light, temperature, humidity) {
                 let message = 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.';
 
-                if (co2 > 800) {
-                    message = 'Yüksek CO₂ seviyesi tespit edildi! Mikroalglerin fotosentezi hızlanabilir.';
-                } else if (co2 < 400) {
-                    message = 'CO₂ seviyesi düşük, fotosentez yavaşlayabilir. CO₂ takviyesi düşünülebilir.';
-                }
+                if (co2 === '--' || mq135 === '--' || light === '--' || temperature === '--' || humidity === '--') {
+                    message = "Sensör verileri yükleniyor veya eksik...";
+                } else {
+                    if (co2 > 800) {
+                        message = 'Yüksek CO₂ seviyesi tespit edildi! Mikroalglerin fotosentezi hızlanabilir.';
+                    } else if (co2 < 400) {
+                        message = 'CO₂ seviyesi düşük, fotosentez yavaşlayabilir. CO₂ takviyesi düşünülebilir.';
+                    }
 
-                if (o2 < 19) {
-                    message += ' Düşük O₂ seviyesi, havalandırma kontrol edilmeli.';
-                }
+                    if (mq135 > 200) { // MQ135 için örnek eşik (mV veya ADC değeri)
+                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
+                            message = '';
+                        }
+                        message += ' Hava kalitesi düşük algılandı, havalandırma kontrol edilmeli.';
+                    }
 
-                if (ph < 7.0) {
-                    message += ' pH değeri asidik tarafta, alg büyümesi için optimize edilmeli.';
-                } else if (ph > 8.0) {
-                    message += ' pH değeri bazik tarafta, alg büyümesi için optimize edilmeli.';
-                }
+                    if (light < 100) { // Lux cinsinden örnek eşik
+                         if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
+                            message = '';
+                        }
+                        message += ' Işık seviyesi düşük, fotosentez için ışık takviyesi düşünülebilir.';
+                    } else if (light > 1000) { // Lux cinsinden örnek eşik
+                         if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
+                            message = '';
+                        }
+                        message += ' Işık seviyesi yüksek, aşırı ışık stresi olabilir.';
+                    }
 
-                if (temp > 28) {
-                    message += ' Su sıcaklığı yüksek, soğutma gerekli olabilir.';
-                } else if (temp < 22) {
-                    message += ' Su sıcaklığı düşük, ısıtma gerekli olabilir.';
+                    if (temperature > 28) {
+                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
+                            message = '';
+                        }
+                        message += ' Su sıcaklığı yüksek, soğutma gerekli olabilir.';
+                    } else if (temperature < 22) {
+                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
+                            message = '';
+                        }
+                        message += ' Su sıcaklığı düşük, ısıtma gerekli olabilir.';
+                    }
+
+                    if (humidity < 40) {
+                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
+                            message = '';
+                        }
+                        message += ' Nem seviyesi düşük, buharlaşma artabilir.';
+                    } else if (humidity > 70) {
+                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
+                            message = '';
+                        }
+                        message += ' Nem seviyesi yüksek, yoğuşma ve mantar riski olabilir.';
+                    }
+
+                    if (message === '') { // If no specific issues, revert to default good message
+                        message = 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.';
+                    }
                 }
                 statusMessageP.innerText = message;
             }
@@ -593,17 +630,19 @@
                         const data = docSnap.data();
                         // Alınan verilerle HTML elementlerini güncelle
                         co2ValueSpan.innerText = `${data.co2 || '--'} ppm`;
-                        o2ValueSpan.innerText = `${data.o2 || '--'} %`;
-                        phValueSpan.innerText = `${data.pH || '--'}`;
+                        mq135ValueSpan.innerText = `${data.mq135_value || '--'} mV`; // MQ135 verisi
+                        lightValueSpan.innerText = `${data.light_value || '--'} lux`; // Işık verisi
                         tempValueSpan.innerText = `${data.temperature || '--'} °C`;
-                        updateStatusMessage(data.co2, data.o2, data.pH, data.temperature); // Durum mesajını güncelle
+                        humidityValueSpan.innerText = `${data.humidity || '--'} %`; // Nem verisi
+                        updateStatusMessage(data.co2, data.mq135_value, data.light_value, data.temperature, data.humidity); // Durum mesajını güncelle
                     } else {
                         console.log("Sensör verisi bulunamadı veya henüz veri gönderilmedi!");
                         statusMessageP.innerText = "Sensör verisi bekleniyor... Lütfen Arduino'nuzdan veri göndermeyi başlatın.";
                         co2ValueSpan.innerText = "-- ppm";
-                        o2ValueSpan.innerText = "-- %";
-                        phValueSpan.innerText = "--";
+                        mq135ValueSpan.innerText = "-- mV";
+                        lightValueSpan.innerText = "-- lux";
                         tempValueSpan.innerText = "-- °C";
+                        humidityValueSpan.innerText = "-- %";
                     }
                 }, (error) => {
                     console.error("Firestore'dan veri çekerken hata oluştu:", error);
@@ -614,4 +653,5 @@
     </script>
 </body>
 </html>
+
 
