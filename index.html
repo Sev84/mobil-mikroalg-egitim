@@ -45,32 +45,6 @@
             text-align: center;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
-        .flow-arrow {
-            color: #118AB2;
-            font-size: 2.5rem;
-            line-height: 1;
-        }
-        .flow-box {
-            border: 2px solid #06D6A0;
-        }
-        .summary-table th {
-            background-color: #118AB2;
-            color: white;
-            padding: 1rem;
-            text-align: left;
-        }
-        .summary-table td {
-            background-color: #ffffff;
-            padding: 1rem;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .summary-table tr:last-child td {
-            border-bottom: none;
-        }
-        .summary-table td:first-child {
-            font-weight: bold;
-            color: #073B4C;
-        }
         .nav-link.active {
             color: #118AB2;
             font-weight: 700;
@@ -180,35 +154,7 @@
             </div>
         </section>
 
-        <section id="station-design" class="py-16 md:py-24">
-            <div class="container mx-auto px-6">
-                 <div class="text-center mb-12 md:mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Mobil Hava Kalitesi İstasyonu</h2>
-                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
-                        İşte afet bölgelerinde hızlıca kurulmak üzere tasarlanan BIQ-Alg 0CO2 istasyonunun konsept tasarımı.
-                    </p>
-                </div>
-                <div class="grid lg:grid-cols-2 gap-8 items-center">
-                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-8 border-[#06D6A0]">
-                        <h3 class="text-2xl font-bold font-heading mb-4 text-[#073B4C]">Tasarım Felsefesi</h3>
-                        <p class="text-gray-600 mb-4">
-                            İstasyon, **modüler, taşınabilir ve kendi kendine yeten** bir yapıdadır. Şeffaf tübüler reaktör, maksimum ışık alımını sağlarken, entegre IoT sensörleri ve otomasyon sistemleri minimum bakım gerektirir.
-                        </p>
-                        <ul class="space-y-2 text-gray-700">
-                            <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Otomatik su ve besin yönetimi</li>
-                            <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Enerji verimli hava kabarcıklandırma sistemi</li>
-                            <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Canlı veri takibi için entegre monitör</li>
-                            <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Döngüsel ekonomi için biyokütle toplama haznesi</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <img src="https://i.imgur.com/kK5GgQW.png" alt="BIQ-Alg 0CO2 Hava İstasyonu Tasarımı" class="rounded-xl shadow-2xl w-full h-auto">
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section id="live-data" class="py-16 md:py-24 bg-gray-100">
+        <section id="live-data" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Canlı Veri İzleme Paneli</h2>
@@ -256,7 +202,7 @@
             </div>
         </section>
 
-        <section id="summary-table-section" class="py-16 md:py-24">
+        <section id="summary-table-section" class="py-16 md:py-24 bg-gray-100">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Projenin Öne Çıkan Yönleri</h2>
@@ -265,36 +211,41 @@
                     </p>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="summary-table w-full min-w-full rounded-lg shadow-lg overflow-hidden">
-                        <thead>
+                    <table class="w-full text-left rounded-lg shadow-lg overflow-hidden">
+                        <thead class="bg-[#118AB2] text-white">
                             <tr>
-                                <th class="w-1/3">Özellik / Alan</th>
-                                <th>Açıklama</th>
+                                <th class="p-4 font-bold uppercase tracking-wider w-1/3">Özellik / Alan</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Açıklama ve Hedef</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Problem Odaklı Geliştirme</td>
-                                <td>Türkiye'de yaşanılan 6 Şubat deprem felaketindeki atmosfer verileri toplanmış ve sistemin geliştirilmesinde bu verilerden yararlanılmıştır.</td>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Problem Odaklı Geliştirme</td>
+                                <td class="p-4 text-gray-700">Türkiye'de yaşanılan 6 Şubat deprem felaketindeki atmosfer verileri toplanmış ve sistemin geliştirilmesinde bu verilerden yararlanılmıştır.</td>
                             </tr>
-                            <tr>
-                                <td>Mobilite ve Anlık Analiz</td>
-                                <td>İstasyon mobil bir yapıdadır. Geliştirilen sistem, afet bölgesindeki atmosfer verilerini (CO₂, PM2.5 vb.) anlık olarak analiz eder, bölgedeki hava kalitesi hakkında bilgi verir ve bu verileri kayıt altına alır.</td>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Mobilite ve Anlık Analiz</td>
+                                <td class="p-4 text-gray-700">İstasyon mobil bir yapıdadır. Geliştirilen sistem, afet bölgesindeki atmosfer verilerini (CO₂, PM2.5 vb.) anlık olarak analiz eder, bölgedeki hava kalitesi hakkında bilgi verir ve bu verileri kayıt altına alır.</td>
                             </tr>
-                            <tr>
-                                <td>Çok Yönlü Fayda</td>
-                                <td>Sistem; afetzedeler için deneyimsel öğrenme ortamı oluşturur, hava kalitesini iyileştirir, ürettiği biyokütle ile döngüsel ekonomiye katkıda bulunur ve ürettiği oksijen ile daha sağlıklı bir yaşam ortamı sağlar.</td>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Çok Yönlü Fayda</td>
+                                <td class="p-4 text-gray-700">Sistem; afetzedeler için deneyimsel öğrenme ortamı oluşturur, hava kalitesini iyileştirir, ürettiği biyokütle ile döngüsel ekonomiye katkıda bulunur ve ürettiği oksijen ile daha sağlıklı bir yaşam ortamı sağlar.</td>
                             </tr>
-                            <tr>
-                                <td>Çift Amaçlı Yapı</td>
-                                <td>Projemiz, hem afet bölgesindeki hava kalitesini etkili bir şekilde iyileştirmekte hem de interaktif bir STEM eğitim istasyonu olarak görev görmektedir.</td>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Çift Amaçlı Yapı</td>
+                                <td class="p-4 text-gray-700">Projemiz, hem afet bölgesindeki hava kalitesini etkili bir şekilde iyileştirmekte hem de interaktif bir STEM eğitim istasyonu olarak görev görmektedir.</td>
+                            </tr>
+                             <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Canlı Veri İzleme</td>
+                                <td class="p-4 text-gray-700">CO₂, Hava Kalitesi, Işık, Sıcaklık ve Nem gibi kritik parametreler anlık olarak izlenir ve web arayüzünden takip edilebilir.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </section>
-        <section id="future" class="py-16 md:py-24 bg-gray-100">
+        
+        <section id="future" class="py-16 md:py-24">
              <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Gelecek Vizyonumuz</h2>
@@ -438,13 +389,12 @@
             }
 
             function startRealtimeListeners() {
-                // *** DÜZELTME: Sabit ve doğru belge yolunu dinle ***
                 const liveDataRef = doc(db, "artifacts/default-app-id/public/data/sensors/current_data");
                 
                 onSnapshot(liveDataRef, (docSnap) => {
                     if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        
+                        const data = docSnap.data().fields; // DÜZELTME: Veriyi 'fields' nesnesinin içinden al
+
                         // Firestore REST API formatından veri okuma
                         const co2 = data.co2?.integerValue || data.co2?.doubleValue || '---';
                         const mq135 = data.mq135_value?.integerValue || data.mq135_value?.doubleValue || '---';
