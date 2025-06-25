@@ -3,1082 +3,495 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIQ-Alg 0CO2: Afet Bölgesi Hava İstasyonu</title>
-    <!-- Seçilen Palet: Mavi-Yeşil Uyum (Açık mavi, koyu teal, çelik mavisi, deniz yeşili) -->
-    <!-- Uygulama Yapısı Planı: SPA, kullanıcıyı temel sorundan (afet sonrası hava kirliliği) çözüme (mikroalgler) ve bunun daha geniş etkilerine yönlendiren tematik, doğrusal olmayan bir yapı kullanır. Yüksek seviyeli bir girişle başlar, ardından teknoloji karşılaştırmasına (interaktif FBR grafiği) dalar, çeşitli uygulamaları (başka bir grafik içeren sekmeli görünüm) keşfeder ve son olarak katma değer yönlerini (döngüsel ekonomi diyagramı, STEM proje kartları) ve gelecek görünümünü kapsar. Yeni bir "Canlı Sensör Verileri" bölümü, Firebase Firestore'dan gerçek zamanlı sensör verilerini okumak ve görüntülemek için eklenmiştir; şimdi MQ135 (hava kalitesi), Işık, Sıcaklık ve Nem sensörlerini içerir. Ayrıca, sensör verilerini grafiksel olarak görselleştirme ve CSV olarak dışa aktarma özellikleri eklenmiştir. Bu istasyon, afetzedeler için hem deneyimsel öğrenme hem de temiz hava sağlayan bir çözüm olarak tasarlanmıştır. Bu versiyon ayrıca Türkiye'deki farklı deprem bölgelerinden simüle edilmiş atmosfer verilerini karşılaştırma yeteneği de içerir. -->
-    <!-- Görselleştirme ve İçerik Seçimleri: FBR'ler: Amaç=Karşılaştır -> Görselleştirme=Çubuk Grafik (Chart.js) -> Etkileşim=Grafik/metni güncellemek için düğmeler. Mobil Sistemler: Amaç=Karşılaştır -> Görselleştirme=Çubuk Grafik (Chart.js). Döngüsel Ekonomi: Amaç=Organize Et/Açıklla -> Görselleştirme=HTML/CSS Diyagramı. STEM Projeleri: Amaç=Bilgilendir/Organize Et -> Görselleştirme=İnteraktif Kartlar. Canlı Sensör Verileri: Amaç=Bilgilendir/İzle -> Görselleştirme=Dinamik metin geri bildirimi içeren HTML/JS sayısal ekran ve Chart.js ile çizelgeler, Firebase Firestore'dan veri çekme (MQ135, Işık, Sıcaklık, Nem). Gerekçe=Öğrenme için gerçek zamanlı veri etkileşimi. Tüm seçimler SVG/Mermaid kullanımından kaçınır, çizelgeler için Canvas ve diyagramlar için yapılandırılmış HTML/CSS kullanır. -->
+    <title>BIQ-Alg 0CO2: Afet Bölgesi İçin İnovatif Hava Çözümü</title>
+    
+    <!-- Seçilen Palet: Energetic & Playful (#FF6B6B, #FFD166, #06D6A0, #118AB2, #073B4C) -->
     <!-- ONAYLAMA: SVG grafikleri kullanılmamıştır. NO Mermaid JS used. -->
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    
     <style>
         body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: #F0F8FF; /* Alice Blue - Çok Açık Mavi */
-            color: #004D40; /* Dark Teal - Koyu Teal */
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #073B4C; 
         }
-        h1, h2, h3, h4, .font-heading {
+        .font-heading {
             font-family: 'Montserrat', sans-serif;
-            color: #004D40; /* Dark Teal - Koyu Teal */
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px;
+            max-width: 550px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px;
-            max-height: 400px;
+            height: 320px;
+            max-height: 450px;
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 350px;
+                height: 400px;
             }
         }
-        .active-nav {
-            color: #4682B4; /* Steel Blue - Çelik Mavisi */
+        .kpi-card {
+            background: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .flow-arrow {
+            color: #118AB2;
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+        .flow-box {
+            border: 2px solid #06D6A0;
+        }
+        .summary-table th {
+            background-color: #118AB2;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+        .summary-table td {
+            background-color: #ffffff;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+        .summary-table td:first-child {
             font-weight: bold;
-            border-bottom: 2px solid #4682B4;
+            color: #073B4C;
         }
-        .inactive-nav {
-            color: #98D8C8; /* Light Teal - Açık Teal */
-        }
-        .active-btn {
-            background-color: #4682B4; /* Steel Blue - Çelik Mavisi */
-            color: #F0F8FF; /* Alice Blue - Çok Açık Mavi */
-        }
-        .inactive-btn {
-            background-color: #98D8C8; /* Light Teal - Açık Teal */
-            color: #004D40; /* Dark Teal - Koyu Teal */
+        .nav-link.active {
+            color: #118AB2;
+            font-weight: 700;
         }
         .message-box {
-            background-color: #004D40; /* Dark Teal - Koyu Teal */
-            color: #F0F8FF; /* Alice Blue - Çok Açık Mavi */
             position: fixed;
-            top: 50%;
+            bottom: 20px;
             left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
+            transform: translateX(-50%);
+            background-color: #073B4C;
+            color: white;
+            padding: 1rem 1.5rem;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             z-index: 1000;
-            text-align: center;
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translate(-50%, 20px);
         }
         .message-box.show {
             opacity: 1;
-            pointer-events: auto;
+            transform: translate(-50%, 0);
         }
     </style>
 </head>
+
 <body class="antialiased">
 
-    <header class="bg-[#F0F8FF]/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-3">
-            <div class="flex justify-between items-center">
-                <a href="#hero" class="text-xl font-bold font-heading text-[#4682B4] flex items-center">
-                    <img src="uploaded:logo111.png-95132dc3-b41e-4fa4-a8a9-9353aa4d297f" onerror="this.onerror=null; this.src='https://placehold.co/40x40/E0F2F7/1A535C?text=Logo';" alt="BioAlg Logosu" class="h-8 md:h-10 w-auto mr-2 inline-block align-middle">
-                    BIQ-Alg 0CO2: Hava İstasyonu
-                </a>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#problem" class="inactive-nav hover:text-[#4682B4] transition-colors">Sorun ve Çözüm</a>
-                    <a href="#technology" class="inactive-nav hover:text-[#4682B4] transition-colors">Teknolojiler</a>
-                    <a href="#applications" class="inactive-nav hover:text-[#4682B4] transition-colors">Uygulamalar</a>
-                    <a href="#value" class="inactive-nav hover:text-[#4682B4] transition-colors">Katma Değer</a>
-                    <a href="#sensors" class="active-nav hover:text-[#4682B4] transition-colors">İzleme ve Uygulama</a>
-                    <a href="#future" class="inactive-nav hover:text-[#4682B4] transition-colors">Gelecek</a>
-                </div>
+    <header class="bg-white/95 backdrop-blur-sm sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#hero" class="flex items-center">
+                <img src="logo111.png" alt="BIQ-Alg 0CO2 Proje Logosu" class="h-12 w-auto" onerror="this.onerror=null; this.src='https://placehold.co/150x50/FFFFFF/073B4C?text=BiQ-Alg+0CO2';">
+            </a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#problem-solution" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Çözüm</a>
+                <a href="#technology" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Teknoloji</a>
+                <a href="#live-data" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Canlı Veri</a>
+                <a href="#summary-table-section" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Özet</a>
+                <a href="#future" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Gelecek</a>
             </div>
         </nav>
     </header>
 
     <main>
-        <section id="hero" class="py-20 md:py-32 bg-[#D6EDF7]"> <!-- Hafif Mavi/Yeşil Arka Plan -->
-            <div class="container mx-auto px-6 text-center">
-                <h1 class="text-4xl md:text-6xl font-bold font-heading text-[#004D40] mb-4">Temiz Nefes, Umut Yeşertir: Afet Bölgelerinde Çevre Dostu Hava İstasyonu</h1>
-                <p class="text-lg md:text-xl text-[#2E8B57] max-w-3xl mx-auto">
-                    Afetzedeler için anında temiz hava ve sürdürülebilir yaşam çözümleri sunan mobil mikroalg teknolojisini keşfedin. Bu eğitim istasyonu, hem çevresel bilinci artıracak hem de pratik hava arıtma sağlayacaktır.
+        <section id="hero" class="py-20 md:py-32" style="background: linear-gradient(135deg, #118AB2 0%, #06D6A0 100%);">
+            <div class="container mx-auto px-6 text-center text-white">
+                <h1 class="text-4xl md:text-6xl font-bold font-heading mb-4 tracking-tight">Afet Sonrası Temiz Nefes: <br> BIQ-Alg 0CO2</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90">
+                    Doğanın en güçlü savaşçıları olan mikroalgler ile afet bölgelerine anında hava kalitesi, sürdürülebilir enerji ve umut taşıyan mobil eğitim istasyonunu keşfedin.
                 </p>
             </div>
         </section>
 
-        <section id="problem" class="py-16 md:py-24">
+        <section id="problem-solution" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#004D40]">Sorun: Görünmez Tehlike ve Güçlü Çözüm</h2>
-                    <p class="mt-4 text-lg text-[#2E8B57] max-w-3xl mx-auto">
-                        Afetler sonrası ortaya çıkan toz, partikül madde ve sera gazları, halk sağlığını tehdit eder. Geleneksel yöntemler yetersiz kalırken, doğanın en verimli fotosentez makineleri olan mikroalgler, bu soruna umut vadeden bir çözüm sunuyor.
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Görünmez Tehlikeye Karşı Biyolojik Kalkan</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Afetler, ardında sadece enkaz bırakmaz; aynı zamanda havayı kirleten tehlikeli partiküllerle doldurur. Geleneksel çözümler yetersiz kalırken, doğa bize çok daha güçlü bir alternatif sunuyor.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 items-center text-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="font-heading text-2xl font-bold text-[#FF6B6B] mb-3">GELENEKSEL YÖNTEMLER</h3>
+                        <p class="text-gray-600">Enerji yoğun, maliyetli ve sadece partikül filtreler. CO₂ yakalama veya O₂ üretme yetenekleri yoktur.</p>
+                    </div>
+                    <div class="p-8">
+                         <div class="text-6xl md:text-8xl font-black text-[#118AB2] font-heading">50x</div>
+                         <p class="font-bold text-xl mt-2 text-[#073B4C]">DAHA VERİMLİ</p>
+                         <p class="text-gray-600 mt-1">Mikroalgler, karasal bitkilere göre 10 ila 50 kat daha verimli CO₂ yakalar.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="font-heading text-2xl font-bold text-[#06D6A0] mb-3">MİKROALG ÇÖZÜMÜ</h3>
+                        <p class="text-gray-600">Havayı temizler, oksijen üretir ve döngüsel ekonomi için değerli biyokütle oluşturur.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="technology" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Hava Arıtmanın Kalbi: Fotobiyoreaktör (FBR) Teknolojileri</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Mikroalglerin gücünü en verimli şekilde kullanmak için farklı reaktör tasarımları mevcuttur. Her birinin kendine özgü avantajları ve performans metrikleri bulunur. Projemiz, mobilite ve verimliliği birleştiren Dikey Tübüler FBR tasarımını temel alır.
                     </p>
                 </div>
                 <div class="grid md:grid-cols-2 gap-8 items-center">
-                    <div class="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
-                        <h3 class="text-2xl font-bold font-heading text-[#98D8C8] mb-3">Geleneksel Yöntemler</h3>
-                        <p class="text-[#2E8B57]">Genellikle reaktif (kirlilik oluştuktan sonra müdahale eden), enerji yoğun ve sadece partikül filtrelemeye odaklıdır. Karbon yakalama veya oksijen üretme yetenekleri yoktur.</p>
+                    <div class="chart-container">
+                        <canvas id="pbrPerformanceChart"></canvas>
                     </div>
-                    <div class="bg-[#4682B4] p-8 rounded-lg shadow-lg text-white"> <!-- Çelik Mavisi -->
-                        <h3 class="text-2xl font-bold font-heading text-white mb-3">Mikroalg Yaklaşımı</h3>
-                        <p>Karasal bitkilerden <span class="font-bold text-2xl">10-50 kat</span> daha verimli CO₂ yakalama kapasitesine sahiptir. Hem havayı temizler, hem oksijen üretir, hem de değerli biyokütle oluşturur.</p>
+                    <div id="pbr-info" class="space-y-4">
+                        <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300">
+                             <h3 class="text-xl font-bold font-heading mb-2 text-[#118AB2]">Dikey Tübüler FBR (Projemizin Seçimi)</h3>
+                            <p class="text-gray-600">Kompakt yapısıyla mobil uygulamalar için idealdir. Kontrollü ortamı sayesinde yüksek verimlilik ve stabilite sunar. Az yer kaplar ve afet bölgelerinde hızla kurulabilir.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 opacity-70">
+                             <h3 class="text-xl font-bold font-heading mb-2 text-[#073B4C]">Düz Panel FBR</h3>
+                            <p class="text-gray-600">Yüksek ışık verimliliği sağlar ancak genellikle daha büyük ve sabit kurulumlar için uygundur.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 opacity-70">
+                             <h3 class="text-xl font-bold font-heading mb-2 text-[#073B4C]">Açık Havuz Sistemleri</h3>
+                            <p class="text-gray-600">Düşük maliyetlidir ancak kirlenme riski yüksek ve verimliliği düşüktür.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="station-design" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Mobil Hava Kalitesi İstasyonu</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        İşte afet bölgelerinde hızlıca kurulmak üzere tasarlanan BIQ-Alg 0CO2 istasyonunun konsept tasarımı.
+                    </p>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-8 border-[#06D6A0]">
+                        <h3 class="text-2xl font-bold font-heading mb-4 text-[#073B4C]">Tasarım Felsefesi</h3>
+                        <p class="text-gray-600 mb-4">
+                            İstasyon, **modüler, taşınabilir ve kendi kendine yeten** bir yapıdadır. Şeffaf tübüler reaktör, maksimum ışık alımını sağlarken, entegre IoT sensörleri ve otomasyon sistemleri minimum bakım gerektirir.
+                        </p>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Otomatik su ve besin yönetimi</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Enerji verimli hava kabarcıklandırma sistemi</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Canlı veri takibi için entegre monitör</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✔</span> Döngüsel ekonomi için biyokütle toplama haznesi</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <img src="https://i.imgur.com/kK5GgQW.png" alt="BIQ-Alg 0CO2 Hava İstasyonu Tasarımı" class="rounded-xl shadow-2xl w-full h-auto">
                     </div>
                 </div>
             </div>
         </section>
         
-        <section id="technology" class="py-16 md:py-24 bg-[#D6EDF7]"> <!-- Hafif Mavi/Yeşil Arka Plan -->
+        <section id="live-data" class="py-16 md:py-24 bg-gray-100">
             <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#004D40]">Teknolojiyi Keşfedin: Fotobiyoreaktör (FBR) Sistemleri</h2>
-                    <p class="mt-4 text-lg text-[#2E8B57] max-w-3xl mx-auto">
-                        Mikroalgleri yetiştirmek ve verimliliklerini en üst düzeye çıkarmak için farklı teknolojiler kullanılır. Aşağıdaki butonlara tıklayarak temel FBR tasarımlarını, özelliklerini ve CO₂ yakalama verimliliklerini karşılaştırın.
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Canlı Veri İzleme Paneli</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        BIQ-Alg 0CO2 istasyonundan gelen gerçek zamanlı sensör verilerini buradan takip edin. Bu panel, sistemin anlık performansını ve çevre koşullarını gösterir.
                     </p>
                 </div>
-                <div class="text-center mb-8 space-x-2 space-y-2">
-                    <button id="btn-pbr-1" class="pbr-btn active-btn px-4 py-2 rounded-md font-semibold transition-colors">Açık Havuzlar</button>
-                    <button id="btn-pbr-2" class="pbr-btn inactive-btn px-4 py-2 rounded-md font-semibold transition-colors">Tübüler FBR</button>
-                    <button id="btn-pbr-3" class="pbr-btn inactive-btn px-4 py-2 rounded-md font-semibold transition-colors">Düz Panel FBR</button>
-                    <button id="btn-pbr-4" class="pbr-btn inactive-btn px-4 py-2 rounded-md font-semibold transition-colors">Kabarcık Kolon FBR</button>
-                </div>
-                <div class="grid md:grid-cols-2 gap-8 items-center">
-                    <div id="pbr-info-card" class="bg-white p-8 rounded-lg shadow-lg transition-opacity duration-500 border border-gray-200">
-                        <h3 id="pbr-title" class="text-2xl font-bold font-heading mb-4 text-[#004D40]">Açık Havuzlar</h3>
-                        <div id="pbr-description" class="text-[#2E8B57]">
-                            <p class="mb-2"><strong class="text-[#2E8B57]">Avantajları:</strong> Düşük kurulum maliyeti, büyük ölçekli endüstriyel büyüme için uygun.</p><p><strong class="text-[#2E8B57]">Dezavantajları:</strong> Geniş alan gereksinimi, dengesiz kültür koşulları, kirlilik riski.</p>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8 text-center">
+                    <div class="kpi-card p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-gray-500 text-sm">CO₂ SEVİYESİ</h4>
+                        <p id="kpi-co2" class="text-3xl font-black text-[#118AB2] mt-1">--- <span class="text-lg">ppm</span></p>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="pbrChart"></canvas>
+                    <div class="kpi-card p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-gray-500 text-sm">HAVA KALİTESİ</h4>
+                        <p id="kpi-mq135" class="text-3xl font-black text-[#06D6A0] mt-1">---</p>
+                    </div>
+                    <div class="kpi-card p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-gray-500 text-sm">IŞIK ŞİDDETİ</h4>
+                        <p id="kpi-light" class="text-3xl font-black text-[#FFD166] mt-1">--- <span class="text-lg">lux</span></p>
+                    </div>
+                    <div class="kpi-card p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-gray-500 text-sm">SICAKLIK</h4>
+                        <p id="kpi-temp" class="text-3xl font-black text-[#FF6B6B] mt-1">-- <span class="text-lg">°C</span></p>
+                    </div>
+                    <div class="kpi-card p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-gray-500 text-sm">NEM</h4>
+                        <p id="kpi-humidity" class="text-3xl font-black text-[#118AB2] mt-1">-- <span class="text-lg">%</span></p>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <section id="applications" class="py-16 md:py-24">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#004D40]">Geniş Uygulama Alanları</h2>
-                    <p class="mt-4 text-lg text-[#2E8B57] max-w-3xl mx-auto">
-                        Mikroalg teknolojisi, endüstriyel bacalardan evimizdeki havaya kadar çok çeşitli alanlarda devrim yaratma potansiyeline sahiptir. Özellikle taşınabilir sistemler, afet bölgelerinde hızlı ve etkili çözümler sunar.
-                    </p>
-                </div>
-                <div class="grid md:grid-cols-2 gap-8 items-start">
-                    <div class="space-y-6">
-                         <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                            <h3 class="text-xl font-bold font-heading mb-2 text-[#004D40]">Endüstriyel Ölçek</h3>
-                            <p class="text-[#2E8B57]">Enerji santralleri ve fabrikaların baca gazlarından CO₂'yi yakalayarak hem çevresel etkiyi azaltır hem de değerli biyokütle üretir.</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                            <h3 class="text-xl font-bold font-heading mb-2 text-[#004D40]">İç Mekan Hava Kalitesi</h3>
-                            <p class="text-[#2E8B57]">Ev ve ofislerde CO₂ seviyelerini düşürür, oksijen üretir ve estetik bir "biyofilik" tasarım öğesi olarak insan psikolojisini olumlu etkiler.</p>
-                        </div>
-                         <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                            <h3 class="text-xl font-bold font-heading mb-2 text-[#004D40]">Mobil ve Afet Çözümleri</h3>
-                            <p class="text-[#2E8B57]">BIQ-Alg 0CO2 gibi taşınabilir, modüler ve enerji verimli sistemler, afet sonrası geçici barınaklarda ve kriz bölgelerinde hızla devreye alınabilir.</p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Sıcaklık ve Nem Trendi (Son 30 Okuma)</h3>
+                        <div class="chart-container" style="height: 300px; max-height: 300px;">
+                            <canvas id="tempHumidityChart"></canvas>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                         <h3 class="text-xl text-center font-bold font-heading mb-4 text-[#004D40]">Taşınabilir Sistemlerin Performansı</h3>
-                         <div class="chart-container h-96">
-                            <canvas id="mobileSystemsChart"></canvas>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi (Son 30 Okuma)</h3>
+                        <div class="chart-container" style="height: 300px; max-height: 300px;">
+                            <canvas id="co2Chart"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="value" class="py-16 md:py-24 bg-[#D6EDF7]"> <!-- Hafif Mavi/Yeşil Arka Plan -->
+        <section id="summary-table-section" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#004D40]">Teknolojinin Ötesi: Katma Değer</h2>
-                    <p class="mt-4 text-lg text-[#2E8B57] max-w-3xl mx-auto">
-                        Mikroalg sistemleri sadece havayı temizlemekle kalmaz; döngüsel ekonomi ve eğitim alanlarında da önemli faydalar sağlar.
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Projenin Öne Çıkan Yönleri</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Aşağıdaki tablo, projemizin temel yeteneklerini ve topluma sağladığı çok yönlü faydaları özetlemektedir.
                     </p>
                 </div>
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div>
-                        <h3 class="text-2xl font-bold font-heading mb-6 text-center text-[#004D40]">Döngüsel Ekonomi: Atıktan Değere</h3>
-                        <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
-                            <div class="text-center p-4 bg-white rounded-lg shadow">
-                                <p class="font-bold text-lg font-heading text-[#2E8B57]">GİRDİ</p>
-                                <p class="text-[#98D8C8]">Atmosferik CO₂</p>
-                                <p class="text-[#98D8C8]">Atık Su Besinleri</p>
-                            </div>
-                            <div class="text-2xl font-bold text-[#2E8B57] transform md:-rotate-0 rotate-90">&rarr;</div>
-                             <div class="text-center p-4 bg-[#4682B4] rounded-lg shadow text-white"> <!-- Çelik Mavisi -->
-                                <p class="font-bold text-lg font-heading">SÜREÇ</p>
-                                <p>Mikroalg Fotosentezi</p>
-                            </div>
-                            <div class="text-2xl font-bold text-[#2E8B57] transform md:-rotate-0 rotate-90">&rarr;</div>
-                            <div class="text-center p-4 bg-white rounded-lg shadow">
-                                <p class="font-bold text-lg font-heading text-[#2E8B57]">ÇIKTI (Biyokütle)</p>
-                                <p class="text-[#98D8C8]">Biyoyakıt & Gübre</p>
-                                <p class="text-[#98D8C8]">Hayvan Yemi & Gıda</p>
-                            </div>
-                        </div>
-                    </div>
-                     <div>
-                        <h3 class="text-2xl font-bold font-heading mb-6 text-center text-[#004D40]">Eğitim ve STEM Farkındalığı</h3>
-                        <div id="stem-projects-container" class="space-y-4">
-                            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                                <h4 class="font-bold text-[#2E8B57]">Uygulamalı Öğrenme</h4>
-                                <p class="text-sm text-[#98D8C8]">Öğrenciler, "Alglerden İp Yapımı" veya "Kendin Yap Güneş Fırını" gibi projelerle sürdürülebilirlik kavramlarını somut olarak deneyimler.</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                                <h4 class="font-bold text-[#2E8B57]">Teknoloji Entegrasyonu</h4>
-                                <p class="text-sm text-[#98D8C8]">IoT sensörleri ile sistem verilerini izlemek, öğrencilere veri analizi ve mühendislik becerileri kazandırır.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-8 p-6 bg-white rounded-lg shadow-lg border border-gray-200">
-                            <h4 class="text-xl font-bold font-heading mb-4 text-[#004D40]">Kendi Projenizi Ekleyin!</h4>
-                            <div class="mb-4">
-                                <label for="project-title" class="block text-sm font-medium text-[#2E8B57] mb-1">Proje Başlığı:</label>
-                                <input type="text" id="project-title" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#98D8C8]" placeholder="Örn: Evde Atık Su Arıtma Projesi">
-                            </div>
-                            <div class="mb-4">
-                                <label for="project-description" class="block text-sm font-medium text-[#2E8B57] mb-1">Proje Açıklaması:</label>
-                                <textarea id="project-description" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#98D8C8]" placeholder="Projenin kısa bir açıklamasını girin..."></textarea>
-                            </div>
-                            <button id="add-project-btn" class="active-btn px-6 py-2 rounded-md font-semibold transition-colors w-full">Proje Ekle</button>
-                        </div>
-                    </div>
+                <div class="overflow-x-auto">
+                    <table class="summary-table w-full min-w-full rounded-lg shadow-lg overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="w-1/3">Özellik / Alan</th>
+                                <th>Açıklama</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Problem Odaklı Geliştirme</td>
+                                <td>Türkiye'de yaşanılan 6 Şubat deprem felaketindeki atmosfer verileri toplanmış ve sistemin geliştirilmesinde bu verilerden yararlanılmıştır.</td>
+                            </tr>
+                            <tr>
+                                <td>Mobilite ve Anlık Analiz</td>
+                                <td>İstasyon mobil bir yapıdadır. Geliştirilen sistem, afet bölgesindeki atmosfer verilerini (CO₂, PM2.5 vb.) anlık olarak analiz eder, bölgedeki hava kalitesi hakkında bilgi verir ve bu verileri kayıt altına alır.</td>
+                            </tr>
+                            <tr>
+                                <td>Çok Yönlü Fayda</td>
+                                <td>Sistem; afetzedeler için deneyimsel öğrenme ortamı oluşturur, hava kalitesini iyileştirir, ürettiği biyokütle ile döngüsel ekonomiye katkıda bulunur ve ürettiği oksijen ile daha sağlıklı bir yaşam ortamı sağlar.</td>
+                            </tr>
+                            <tr>
+                                <td>Çift Amaçlı Yapı</td>
+                                <td>Projemiz, hem afet bölgesindeki hava kalitesini etkili bir şekilde iyileştirmekte hem de interaktif bir STEM eğitim istasyonu olarak görev görmektedir.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
-
-        <section id="sensors" class="py-16 md:py-24">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#004D40]">Canlı Sensör Verileri ve İstasyon İzleme</h2>
-                    <p class="mt-4 text-lg text-[#2E8B57] max-w-3xl mx-auto">
-                        Bu bölüm, BIQ-Alg 0CO2 hava istasyonunun canlı çevresel verilerini ve donanım bileşenlerinin durumunu göstermektedir. Veriler, ESP32 DevKitC kartı ve entegre sensörlerden gerçek zamanlı olarak alınmaktadır. Afetzedeler için temiz hava sağlayan bu eğitim istasyonu, hem bir izleme monitörü hem de uygulamalı bir öğrenme platformu olarak kullanılacaktır.
-                        <br><br>
-                        İstasyonda bulunan sensörler ve aktüatörler: **DS18B20 Sıcaklık Sensörü**, **MQ-135 Gaz Sensörü**, **TSL2591 (veya BH1750) Işık Sensörü**. Ayrıca, sistem durumunu gösteren bir **OLED Ekran**, otomasyon için **Röle Modülü** ve test amaçlı bir **Servo Motor** (pompa yerine) ESP32 DevKitC kartına bağlıdır. Web uygulaması, bu fiziksel bileşenlerin durumunu ve sensör okumalarını izler, ancak doğrudan kontrol sağlamaz.
-                    </p>
-                </div>
-
-                <!-- Veri Görünümü Seçici -->
-                <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
-                    <div class="flex items-center space-x-2">
-                        <label for="data-view-mode" class="text-lg font-semibold text-[#004D40]">Veri Görünümü:</label>
-                        <select id="data-view-mode" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4682B4]">
-                            <option value="live">Canlı İstasyon Verisi</option>
-                            <option value="historical">Geçmiş Bölgesel Veriler</option>
-                        </select>
-                    </div>
-                    <div id="region-select-container" class="flex items-center space-x-2 hidden">
-                        <label for="region-select" class="text-lg font-semibold text-[#004D40]">Bölge Seçin:</label>
-                        <select id="region-select" class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4682B4]">
-                            <!-- Bölgeler JavaScript tarafından doldurulacak -->
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Sayısal Sensör Değerleri -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
-                        <h3 class="text-xl font-bold font-heading text-[#2E8B57]">CO₂ Seviyesi</h3>
-                        <p id="co2-value" class="text-4xl font-bold text-[#004D40] mt-2">-- ppm</p>
-                    </div>
-                     <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
-                        <h3 class="text-xl font-bold font-heading text-[#2E8B57]">Hava Kalitesi (MQ135)</h3>
-                        <p id="mq135-value" class="text-4xl font-bold text-[#004D40] mt-2">-- mV</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
-                        <h3 class="text-xl font-bold font-heading text-[#2E8B57]">Işık Şiddeti (TSL2591/BH1750)</h3>
-                        <p id="light-value" class="text-4xl font-bold text-[#004D40] mt-2">-- lux</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg text-center border border-gray-200">
-                        <h3 class="text-xl font-bold font-heading text-[#2E8B57]">Sıcaklık (DS18B20) ve Nem</h3>
-                        <p id="temp-value" class="text-4xl font-bold text-[#004D40] mt-2">-- °C</p>
-                        <p id="humidity-value" class="text-4xl font-bold text-[#004D40] mt-2">-- %</p>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 text-center mb-8">
-                    <h3 class="text-xl font-bold font-heading text-[#004D40] mb-4">Sistem Durumu Mesajı</h3>
-                    <p id="status-message" class="text-lg text-[#2E8B57]">Sensör verileri yükleniyor...</p>
-                </div>
-
-                <!-- Grafiksel Sensör Verileri -->
-                <div class="text-center mb-8">
-                    <h3 class="text-2xl font-bold font-heading text-[#004D40] mb-4">Veri Grafikleri (Son 30 Okuma)</h3>
-                    <button id="download-csv-btn" class="active-btn px-6 py-2 rounded-md font-semibold transition-colors">Verileri CSV Olarak İndir</button>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                        <h4 class="text-lg font-bold font-heading text-[#2E8B57] mb-4 text-center">CO₂ Seviyesi Trendi</h4>
-                        <div class="chart-container">
-                            <canvas id="co2ChartCanvas"></canvas>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                        <h4 class="text-lg font-bold font-heading text-[#2E8B57] mb-4 text-center">Hava Kalitesi (MQ135) Trendi</h4>
-                        <div class="chart-container">
-                            <canvas id="mq135ChartCanvas"></canvas>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                        <h4 class="text-lg font-bold font-heading text-[#2E8B57] mb-4 text-center">Işık Şiddeti Trendi</h4>
-                        <div class="chart-container">
-                            <canvas id="lightChartCanvas"></canvas>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                        <h4 class="text-lg font-bold font-heading text-[#2E8B57] mb-4 text-center">Sıcaklık ve Nem Trendi</h4>
-                        <div class="chart-container">
-                            <canvas id="tempHumidityChartCanvas"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="future" class="py-16 md:py-24">
+        <section id="future" class="py-16 md:py-24 bg-gray-100">
              <div class="container mx-auto px-6">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#004D40]">Gelecek Vizyonu ve Öneriler</h2>
-                     <p class="mt-4 text-lg text-[#2E8B57] max-w-3xl mx-auto">
-                        Bu teknolojinin potansiyelini tam olarak hayata geçirmek için stratejik adımlar atılmalıdır.
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Gelecek Vizyonumuz</h2>
+                     <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Bu proje, daha yeşil ve sağlıklı bir gelecek için sadece bir başlangıç.
                     </p>
                 </div>
                 <div class="grid md:grid-cols-3 gap-8 text-center">
-                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                        <div class="text-4xl mb-4 text-[#2E8B57]">⚙️</div> <!-- Deniz Yeşili -->
-                        <h3 class="text-xl font-bold font-heading mb-2">Teknoloji Geliştirme</h3>
-                        <p class="text-[#2E8B57]">Daha dayanıklı alg türleri araştırmak, FBR tasarımlarını optimize etmek ve maliyetleri düşürmek.</p>
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-5xl mb-4">⚙️</div>
+                        <h3 class="text-xl font-bold font-heading mb-2 text-[#118AB2]">Teknoloji Geliştirme</h3>
+                        <p class="text-gray-600">Daha verimli ve dayanıklı alg türleri araştırmak, FBR tasarımlarını optimize etmek ve maliyetleri düşürmek.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                        <div class="text-4xl mb-4 text-[#4682B4]">🌍</div> <!-- Çelik Mavisi -->
-                        <h3 class="text-xl font-bold font-heading mb-2">Saha Uygulamaları</h3>
-                        <p class="text-[#2E8B57]">Mobil ünitelerin afet senaryolarında test edilmesi ve mevcut altyapılarla entegrasyonu.</p>
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-5xl mb-4">🌍</div>
+                        <h3 class="text-xl font-bold font-heading mb-2 text-[#06D6A0]">Yaygınlaştırma</h3>
+                        <p class="text-gray-600">Mobil üniteleri farklı afet senaryolarında test ederek kentsel alanlara ve okullara entegre etmek.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                        <div class="text-4xl mb-4 text-[#98D8C8]">🤝</div> <!-- Açık Teal -->
-                        <h3 class="text-xl font-bold font-heading mb-2">Ekonomik Sürdürülebilirlik</h3>
-                        <p class="text-[#2E8B57]">Biyokütle yan ürünlerinin pazarını geliştirmek ve yatırım için yeni finansman modelleri oluşturmak.</p>
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-5xl mb-4">🤝</div>
+                        <h3 class="text-xl font-bold font-heading mb-2 text-[#FFD166]">Ekonomik Model</h3>
+                        <p class="text-gray-600">Biyokütle yan ürünleri için pazar oluşturmak ve karbon kredisi gibi finansman modelleri geliştirmek.</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-[#004D40] text-[#F0F8FF] py-8"> <!-- Koyu Teal Arka Plan -->
+    <footer class="bg-[#073B4C] text-white py-8">
         <div class="container mx-auto px-6 text-center">
-            <p>&copy; 2025 BIQ-Alg 0CO2: Hava Kalitesi Eğitim İstasyonu. Çevre Dostu ve Sürdürülebilir Çözüm.</p>
-            <p class="text-sm text-[#98D8C8] mt-2">Bu uygulama, BIQ-Alg 0CO2 projesi kapsamında geliştirilmiştir.</p>
+            <p>&copy; 2025 BIQ-Alg 0CO2 Projesi. Tüm Hakları Saklıdır.</p>
+            <p class="text-sm opacity-70 mt-2">Daha Yeşil Bir Gelecek İçin Biyoteknoloji.</p>
         </div>
     </footer>
-
-    <div id="message-box" class="message-box">
-        <p id="message-text"></p>
-    </div>
+    
+    <div id="message-box" class="message-box"></div>
 
     <script type="module">
-        // Firebase SDK'larını içe aktarın
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // Gerekli tüm Firestore modüllerini ekleyin
-        import { getFirestore, doc, onSnapshot, collection, query, limit, orderBy, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', async function () {
             
-            // Mevcut pbrData ve pbrInfo tanımlamaları...
-            const pbrData = {
-                labels: ['CO₂ Fiksasyon Verimliliği (%)'],
-                datasets: [
-                    { label: 'Açık Havuzlar', data: [90], backgroundColor: '#98D8C8' }, /* Light Teal */
-                    { label: 'Tübüler FBR', data: [76], backgroundColor: '#4682B4', hidden: true }, /* Steel Blue */
-                    { label: 'Düz Panel FBR', data: [85], backgroundColor: '#2E8B57', hidden: true }, /* Sea Green */
-                    { label: 'Kabarcık Kolon FBR', data: [90], backgroundColor: '#004D40', hidden: true } /* Dark Teal */
-                ]
-            };
-            
-            const pbrInfo = {
-                'btn-pbr-1': { title: 'Açık Havuzlar', description: '<p class="mb-2"><strong class="text-[#2E8B57]">Avantajları:</strong> Düşük kurulum maliyeti, büyük ölçekli endüstriyel büyüme için uygun.</p><p><strong class="text-[#2E8B57]">Dezavantajları:</strong> Geniş alan gereksinimi, dengesiz kültür koşulları, kirlilik riski.</p>' },
-                'btn-pbr-2': { title: 'Tübüler FBR', description: '<p class="mb-2"><strong class="text-[#2E8B57]">Avantajları:</strong> Aseptik çalışma, stabil koşullar, su buharlaşmasını önler, mimari entegrasyon potansiyeli.</p><p><strong class="text-[#2E8B57]">Dezavantajları:</strong> Yüksek inşaat ve işletme maliyetleri.</p>' },
-                'btn-pbr-3': { title: 'Düz Panel FBR', description: '<p class="mb-2"><strong class="text-[#2E8B57]">Avantajları:</strong> Olağanüstü CO₂ emilimi, optimize edilmiş mikroalg büyümesi, yüksek karbon tutulumu.</p><p><strong class="text-[#2E8B57]">Dezavantajları:</strong> Yüksek teknoloji gereksinimi.</p>' },
-                'btn-pbr-4': { title: 'Kabarcık Kolon FBR', description: '<p class="mb-2"><strong class="text-[#2E8B57]">Avantajları:</strong> Sıcaklık kontrolü, düşük basınç düşüşü, yüksek arayüzey alanı.</p><p><strong class="text-[#2E8B57]">Dezavantajları:</strong> Yüksek konsantrasyonlarda etkilidir, daha karmaşık yapı.</p>' }
-            };
-
-            const pbrCtx = document.getElementById('pbrChart').getContext('2d');
-            const pbrChart = new Chart(pbrCtx, {
-                type: 'bar',
-                data: pbrData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            title: { display: true, text: 'Verimlilik (%)' }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${context.raw}%`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            const pbrButtons = document.querySelectorAll('.pbr-btn');
-            pbrButtons.forEach((button, index) => {
-                button.addEventListener('click', () => {
-                    pbrButtons.forEach(btn => {
-                        btn.classList.remove('active-btn');
-                        btn.classList.add('inactive-btn');
-                    });
-                    button.classList.add('active-btn');
-                    button.classList.remove('inactive-btn');
-
-                    pbrChart.data.datasets.forEach((dataset, i) => {
-                        dataset.hidden = (i !== index);
-                    });
-                    pbrChart.update();
-                    
-                    const info = pbrInfo[button.id];
-                    document.getElementById('pbr-title').innerText = info.title;
-                    document.getElementById('pbr-description').innerHTML = info.description;
-                });
-            });
-
-            const mobileSystemsData = {
-                labels: ['aerium', 'Vayu', 'Liquid 3'],
-                datasets: [{
-                    label: 'Eşdeğer Ev Bitkisi/Ağaç Sayısı',
-                    data: [25, 40, 200], 
-                    backgroundColor: ['#98D8C8', '#4682B4', '#2E8B57'], /* Light Teal, Steel Blue, Sea Green */
-                    borderColor: '#F0F8FF', /* Alice Blue */
-                    borderWidth: 2
-                }]
-            };
-
-            const mobileSystemsCtx = document.getElementById('mobileSystemsChart').getContext('2d');
-            new Chart(mobileSystemsCtx, {
-                type: 'doughnut',
-                data: mobileSystemsData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                             callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed !== null) {
-                                        let value = context.parsed;
-                                        if (context.label === 'Liquid 3') {
-                                           label += `${value / 100} ağaca eşdeğer`;
-                                        } else {
-                                           label += `${value} ev bitkisine eşdeğer`;
-                                        }
-                                    }
-                                    return label;
-                                }
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Performans (Eşdeğer Bitki/Ağaç Sayısı)',
-                            padding: { top: 10, bottom: 10 }
-                        }
-                    }
-                }
-            });
-            
-            const navLinks = document.querySelectorAll('header nav a');
-            const sections = document.querySelectorAll('main section');
-            
-            window.addEventListener('scroll', () => {
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    if (pageYOffset >= sectionTop - 60) {
-                        current = section.getAttribute('id');
-                    }
-                });
-
-                navLinks.forEach(link => {
-                    link.classList.remove('active-nav');
-                    link.classList.add('inactive-nav');
-                    if (link.href.includes(current)) {
-                        link.classList.add('active-nav');
-                        link.classList.remove('inactive-nav');
-                    }
-                });
-            });
-
-            // STEM Proje Ekleme Mantığı (Değişmedi)
-            const addProjectBtn = document.getElementById('add-project-btn');
-            const projectTitleInput = document.getElementById('project-title');
-            const projectDescriptionInput = document.getElementById('project-description');
-            const stemProjectsContainer = document.getElementById('stem-projects-container');
-            const messageBox = document.getElementById('message-box');
-            const messageText = document.getElementById('message-text');
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+            let db, auth;
 
             function showMessage(message, duration = 3000) {
-                messageText.innerText = message;
+                const messageBox = document.getElementById('message-box');
+                messageBox.textContent = message;
                 messageBox.classList.add('show');
                 setTimeout(() => {
                     messageBox.classList.remove('show');
                 }, duration);
             }
 
-            addProjectBtn.addEventListener('click', () => {
-                const title = projectTitleInput.value.trim();
-                const description = projectDescriptionInput.value.trim();
-
-                if (title === '' || description === '') {
-                    showMessage('Lütfen proje başlığı ve açıklamasını girin.');
-                    return;
-                }
-
-                const newProjectDiv = document.createElement('div');
-                newProjectDiv.className = 'bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow';
-                newProjectDiv.innerHTML = `
-                    <h4 class="font-bold text-[#2E8B57]">${title}</h4> <!-- Deniz Yeşili -->
-                    <p class="text-sm text-[#98D8C8]">${description}</p> <!-- Açık Teal -->
-                `;
-                stemProjectsContainer.appendChild(newProjectDiv);
-
-                projectTitleInput.value = '';
-                projectDescriptionInput.value = '';
-                showMessage('Proje başarıyla eklendi!');
-            });
-
-            // Sensör Veri Görüntüleme Elemanları
-            const co2ValueSpan = document.getElementById('co2-value');
-            const mq135ValueSpan = document.getElementById('mq135-value');
-            const lightValueSpan = document.getElementById('light-value');
-            const tempValueSpan = document.getElementById('temp-value');
-            const humidityValueSpan = document.getElementById('humidity-value');
-            const statusMessageP = document.getElementById('status-message');
-            const dataViewModeSelect = document.getElementById('data-view-mode');
-            const regionSelectContainer = document.getElementById('region-select-container');
-            const regionSelect = document.getElementById('region-select');
-
-            let currentViewMode = 'live'; // Varsayılan görünüm modu
-            let currentLiveListener = null; // Canlı veri dinleyicisini tutmak için
-
-            function updateStatusMessage(co2, mq135, light, temperature, humidity) {
-                if (currentViewMode === 'historical') {
-                    statusMessageP.innerText = "Geçmiş veriler görüntüleniyor. Gerçek zamanlı sistem durumu mevcut değil.";
-                    return;
-                }
-
-                let message = 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.';
-
-                // Eğer değerler hala varsayılan '--' ise yükleniyor mesajını göster
-                if (co2 === '--' || mq135 === '--' || light === '--' || temperature === '--' || humidity === '--') {
-                    message = "Sensör verileri yükleniyor veya eksik...";
-                } else {
-                    // Sayısal değerler üzerinden mesajları güncelle
-                    if (co2 > 800) {
-                        message = 'Yüksek CO₂ seviyesi tespit edildi! Mikroalglerin fotosentezi hızlanabilir.';
-                    } else if (co2 < 400) {
-                        message = 'CO₂ seviyesi düşük, fotosentez yavaşlayabilir. CO₂ takviyesi düşünülebilir.';
-                    }
-
-                    if (mq135 > 200) { 
-                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') { 
-                            message = ''; 
-                        }
-                        message += ' Hava kalitesi düşük algılandı, havalandırma kontrol edilmeli.';
-                    }
-
-                    if (light < 100) { 
-                         if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
-                            message = '';
-                        }
-                        message += ' Işık seviyesi düşük, fotosentez için ışık takviyesi düşünülebilir.';
-                    } else if (light > 1000) { 
-                         if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
-                            message = '';
-                        }
-                        message += ' Işık seviyesi yüksek, aşırı ışık stresi olabilir.';
-                    }
-
-                    if (temperature > 28) {
-                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
-                            message = '';
-                        }
-                        message += ' Sıcaklık yüksek, soğutma gerekli olabilir.';
-                    } else if (temperature < 22) {
-                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
-                            message = '';
-                        }
-                        message += ' Sıcaklık düşük, ısıtma gerekli olabilir.';
-                    }
-
-                    if (humidity < 40) {
-                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
-                            message = '';
-                        }
-                        message += ' Nem seviyesi düşük, buharlaşma artabilir.';
-                    } else if (humidity > 70) {
-                        if (message === 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.') {
-                            message = '';
-                        }
-                        message += ' Nem seviyesi yüksek, yoğuşma ve mantar riski olabilir.';
-                    }
-
-                    if (message === '') { 
-                        message = 'Sistem durumu iyi. Mikroalgler aktif olarak çalışıyor.';
-                    }
-                }
-                statusMessageP.innerText = message;
-            }
-
-            // Firebase Entegrasyonu Başlangıcı
-            let db; // Firestore veritabanı örneği
-            let auth; // Firebase kimlik doğrulama örneği
-            let userId; // Kullanıcı kimliği
-            
-            // Canvas tarafından sağlanan global değişkenleri kullanın
-            const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-            // Firebase'i başlat
             try {
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
-
-                // Kimlik doğrulama durumu değiştiğinde dinleyici
-                onAuthStateChanged(auth, async (user) => {
-                    if (!user) {
-                        // Kullanıcı oturum açmadıysa anonim olarak oturum açmayı dene
-                        try {
-                            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                                await signInWithCustomToken(auth, __initial_auth_token);
-                                console.log("Özel token ile oturum açıldı.");
-                            } else {
-                                await signInAnonymously(auth);
-                                console.log("Anonim olarak oturum açıldı.");
-                            }
-                            userId = auth.currentUser.uid; // Oturum açtıktan sonra userId'yi al
-                            console.log("Firestore userId:", userId);
-                            // Simüle edilmiş geçmiş verileri oluştur (sadece bir kez çalıştırılmalı)
-                            await simulateHistoricalData();
-                            startDataListening(); // Kimlik doğrulama sonrası veri dinlemeyi başlat
-                        } catch (error) {
-                            console.error("Firebase Kimlik Doğrulama Hatası:", error);
-                            statusMessageP.innerText = "Hata: Kimlik doğrulama başarısız oldu. Sensör verileri yüklenemiyor.";
-                        }
-                    } else {
-                        // Zaten oturum açmışsa
-                        userId = user.uid;
-                        console.log("Kullanıcı zaten oturum açık:", userId);
-                        // Simüle edilmiş geçmiş verileri oluştur (sadece bir kez çalıştırılmalı)
-                        await simulateHistoricalData();
-                        startDataListening(); // Kimlik doğrulama sonrası veri dinlemeyi başlat
-                    }
-                });
-
-            } catch (error) {
-                console.error("Firebase Başlatma Hatası:", error);
-                statusMessageP.innerText = "Hata: Firebase başlatılamadı. Sensör verileri yüklenemiyor.";
+            } catch(e) {
+                console.error("Firebase başlatma hatası:", e);
+                showMessage("Uygulama başlatılamadı. Lütfen sayfayı yenileyin.");
+                return;
             }
-
-            // Sensör Verisi Geçmişini Depolama ve Grafik Ayarları
-            let sensorDataHistory = []; // Canlı veri için
-            const MAX_DATA_POINTS = 30; // Grafikte gösterilecek maksimum veri noktası sayısı
-            let historicalDataCache = {}; // Geçmiş veri önbelleği
-
-            // Grafik Nesneleri
-            let co2Chart, mq135Chart, lightChart, tempHumidityChart;
-
-            // Grafiklerin Başlatılması
-            function initializeCharts() {
-                const defaultChartOptions = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: 'category', 
-                            title: {
-                                display: true,
-                                text: 'Zaman'
-                            },
-                             ticks: {
-                                autoSkip: true,
-                                maxTicksLimit: 10 
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Değer'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: true },
-                        tooltip: { mode: 'index', intersect: false }
-                    }
-                };
-
-                // CO2 Grafiği
-                const co2Ctx = document.getElementById('co2ChartCanvas').getContext('2d');
-                co2Chart = new Chart(co2Ctx, {
-                    type: 'line',
-                    data: { labels: [], datasets: [{ label: 'CO₂ (ppm)', data: [], borderColor: '#4682B4', tension: 0.1, fill: false }] }, /* Steel Blue */
-                    options: {
-                        ...defaultChartOptions,
-                        scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'CO₂ (ppm)' } } }
-                    }
-                });
-
-                // MQ135 Hava Kalitesi Grafiği
-                const mq135Ctx = document.getElementById('mq135ChartCanvas').getContext('2d');
-                mq135Chart = new Chart(mq135Ctx, {
-                    type: 'line',
-                    data: { labels: [], datasets: [{ label: 'Hava Kalitesi (mV)', data: [], borderColor: '#2E8B57', tension: 0.1, fill: false }] }, /* Sea Green */
-                    options: {
-                        ...defaultChartOptions,
-                        scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'MQ135 (mV)' } } }
-                    }
-                });
-
-                // Işık Şiddeti Grafiği
-                const lightCtx = document.getElementById('lightChartCanvas').getContext('2d');
-                lightChart = new Chart(lightCtx, {
-                    type: 'line',
-                    data: { labels: [], datasets: [{ label: 'Işık Şiddeti (lux)', data: [], borderColor: '#98D8C8', tension: 0.1, fill: false }] }, /* Light Teal */
-                    options: {
-                        ...defaultChartOptions,
-                        scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'Işık (lux)' } } }
-                    }
-                });
-
-                // Sıcaklık ve Nem Grafiği
-                const tempHumidityCtx = document.getElementById('tempHumidityChartCanvas').getContext('2d');
-                tempHumidityChart = new Chart(tempHumidityCtx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [
-                            { label: 'Sıcaklık (°C)', data: [], borderColor: '#4682B4', tension: 0.1, fill: false }, /* Steel Blue */
-                            { label: 'Nem (%)', data: [], borderColor: '#2E8B57', tension: 0.1, fill: false } /* Sea Green */
-                        ]
-                    },
-                    options: {
-                        ...defaultChartOptions,
-                        scales: { ...defaultChartOptions.scales, y: { ...defaultChartOptions.scales.y, title: { display: true, text: 'Değer' } } }
-                    }
-                });
-            }
-
-            // Canlı sensör verilerini dinleme
-            function listenToLiveSensorData() {
-                if (currentLiveListener) {
-                    currentLiveListener(); // Önceki dinleyiciyi kapat
-                }
-                const sensorDocRef = doc(db, `artifacts/${appId}/public/data/sensors/current_data`);
-
-                currentLiveListener = onSnapshot(sensorDocRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        const timestamp = data.timestamp && data.timestamp.toDate ? data.timestamp.toDate() : new Date();
-
-                        const newDataPoint = {
-                            timestamp: timestamp,
-                            co2: data.co2,
-                            mq135_value: data.mq135_value,
-                            light_value: data.light_value,
-                            temperature: data.temperature,
-                            humidity: data.humidity
-                        };
-                        sensorDataHistory.push(newDataPoint);
-
-                        if (sensorDataHistory.length > MAX_DATA_POINTS) {
-                            sensorDataHistory.shift();
-                        }
-                        updateDisplay(sensorDataHistory); // Canlı veriyi kullanarak ekranı güncelle
-                    } else {
-                        console.log("Canlı sensör verisi bulunamadı veya henüz veri gönderilmedi!");
-                        updateDisplay([]); // Ekranı sıfırla
-                        statusMessageP.innerText = "Sensör verisi bekleniyor... Lütfen Arduino'nuzdan veri göndermeyi başlatın.";
-                    }
-                }, (error) => {
-                    console.error("Firestore'dan canlı veri çekerken hata oluştu:", error);
-                    statusMessageP.innerText = "Hata: Canlı sensör verileri yüklenemiyor. Konsolu kontrol edin.";
-                });
-            }
-
-            // Geçmiş sensör verilerini çekme
-            async function fetchHistoricalData(regionId) {
-                if (historicalDataCache[regionId]) {
-                    return historicalDataCache[regionId];
-                }
-                try {
-                    const q = query(
-                        collection(db, `artifacts/${appId}/public/data/earthquake_regions/${regionId}/atmospheric_data`),
-                        orderBy('timestamp'),
-                        limit(MAX_DATA_POINTS)
-                    );
-                    const querySnapshot = await getDocs(q);
-                    const data = [];
-                    querySnapshot.forEach((doc) => {
-                        const docData = doc.data();
-                        data.push({
-                            timestamp: docData.timestamp.toDate(),
-                            co2: docData.co2,
-                            mq135_value: docData.mq135_value,
-                            light_value: docData.light_value,
-                            temperature: docData.temperature,
-                            humidity: docData.humidity
-                        });
-                    });
-                    historicalDataCache[regionId] = data;
-                    return data;
-                } catch (error) {
-                    console.error(`Geçmiş veri (${regionId}) çekerken hata oluştu:`, error);
-                    showMessage(`Hata: ${regionId} için geçmiş veri yüklenemedi.`);
-                    return [];
-                }
-            }
-
-            // Sayısal ekranları ve grafikleri güncelleyen ana fonksiyon
-            function updateDisplay(dataPoints) {
-                if (dataPoints.length > 0) {
-                    const latestData = dataPoints[dataPoints.length - 1];
-                    co2ValueSpan.innerText = `${latestData.co2 || '--'} ppm`;
-                    mq135ValueSpan.innerText = `${latestData.mq135_value || '--'} mV`;
-                    lightValueSpan.innerText = `${latestData.light_value || '--'} lux`;
-                    tempValueSpan.innerText = `${latestData.temperature || '--'} °C`;
-                    humidityValueSpan.innerText = `${latestData.humidity || '--'} %`;
-                    updateStatusMessage(latestData.co2, latestData.mq135_value, latestData.light_value, latestData.temperature, latestData.humidity);
+            
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    console.log("Kullanıcı oturum açtı:", user.uid);
+                    startRealtimeListeners();
                 } else {
-                    co2ValueSpan.innerText = "-- ppm";
-                    mq135ValueSpan.innerText = "-- mV";
-                    lightValueSpan.innerText = "-- lux";
-                    tempValueSpan.innerText = "-- °C";
-                    humidityValueSpan.innerText = "-- %";
-                    updateStatusMessage('--', '--', '--', '--', '--'); // Durum mesajını da sıfırla
-                }
-                updateCharts(dataPoints);
-            }
-
-            // Tüm grafikleri güncelleme fonksiyonu
-            function updateCharts(dataPoints) {
-                const labels = dataPoints.map(point => new Date(point.timestamp).toLocaleTimeString('tr-TR'));
-
-                co2Chart.data.labels = labels;
-                co2Chart.data.datasets[0].data = dataPoints.map(point => point.co2);
-                co2Chart.update();
-
-                mq135Chart.data.labels = labels;
-                mq135Chart.data.datasets[0].data = dataPoints.map(point => point.mq135_value);
-                mq135Chart.update();
-
-                lightChart.data.labels = labels;
-                lightChart.data.datasets[0].data = dataPoints.map(point => point.light_value);
-                lightChart.update();
-
-                tempHumidityChart.data.labels = labels;
-                tempHumidityChart.data.datasets[0].data = dataPoints.map(point => point.temperature);
-                tempHumidityChart.data.datasets[1].data = dataPoints.map(point => point.humidity);
-                tempHumidityChart.update();
-            }
-
-            // Veri görünüm modunu değiştiren fonksiyon
-            async function switchDataViewMode() {
-                currentViewMode = dataViewModeSelect.value;
-
-                if (currentViewMode === 'live') {
-                    regionSelectContainer.classList.add('hidden');
-                    listenToLiveSensorData();
-                    updateDisplay(sensorDataHistory); // Mevcut canlı veriyi tekrar göster
-                } else { // historical
-                    if (currentLiveListener) {
-                        currentLiveListener(); // Canlı dinleyiciyi kapat
-                        currentLiveListener = null;
-                    }
-                    regionSelectContainer.classList.remove('hidden');
-                    // Bölge seçildiğinde tetiklenecek fonksiyonu çağır
-                    if (regionSelect.value) {
-                        const historicalData = await fetchHistoricalData(regionSelect.value);
-                        updateDisplay(historicalData);
-                    } else {
-                        updateDisplay([]); // Henüz bölge seçilmediyse ekranı sıfırla
+                     try {
+                        const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                        if (token) {
+                            await signInWithCustomToken(auth, token);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    } catch (error) {
+                        console.error("Kimlik doğrulama hatası:", error);
+                        showMessage("Canlı verilere bağlanılamadı.");
                     }
                 }
-            }
-
-            // `startDataListening` fonksiyonunu tanımla
-            async function startDataListening() {
-                // Bu fonksiyon, kimlik doğrulama tamamlandığında çağrılır
-                // ve başlangıçta seçili olan görünüme göre veri dinlemeyi başlatır.
-                await switchDataViewMode();
-            }
-
-
-            dataViewModeSelect.addEventListener('change', switchDataViewMode);
-            regionSelect.addEventListener('change', async () => {
-                const selectedRegionId = regionSelect.value;
-                const historicalData = await fetchHistoricalData(selectedRegionId);
-                updateDisplay(historicalData);
             });
 
-            // Bölge seçeneklerini doldurma
-            const regions = {
-                'kahramanmaras': 'Kahramanmaraş',
-                'hatay': 'Hatay',
-                'gaziantep': 'Gaziantep',
-                'adiyaman': 'Adıyaman'
+            const pbrPerformanceData = {
+                labels: ['Biyokütle Verimliliği (g/L/gün)', 'Maks. Biyokütle Yoğunluğu (g/L)'],
+                datasets: [
+                    { label: 'Dikey Tübüler FBR', data: [1.65, 20.0], backgroundColor: '#118AB2' },
+                    { label: 'Düz Panel FBR', data: [4.8, 26.6], backgroundColor: '#06D6A0' },
+                    { label: 'Açık Havuz', data: [0.3, 1.5], backgroundColor: '#FFD166' }
+                ]
             };
 
-            for (const id in regions) {
-                const option = document.createElement('option');
-                option.value = id;
-                option.textContent = regions[id];
-                regionSelect.appendChild(option);
-            }
+            const pbrCtx = document.getElementById('pbrPerformanceChart').getContext('2d');
+            new Chart(pbrCtx, {
+                type: 'bar', data: pbrPerformanceData,
+                options: { responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Değer' } } },
+                    plugins: { title: { display: true, text: 'Farklı FBR Teknolojilerinin Performans Karşılaştırması' } }
+                }
+            });
 
-            // Geçmiş simülasyon verilerini Firebase'e yükle (Yalnızca bir kez çalıştırılmalı)
-            async function simulateHistoricalData() {
-                // Her bölge için simüle edilmiş veri oluştur ve yükle
-                for (const regionId in regions) {
-                    const collectionRef = collection(db, `artifacts/${appId}/public/data/earthquake_regions/${regionId}/atmospheric_data`);
-                    
-                    // Sadece veri yoksa yükle
-                    // `getDocs` doğru bir şekilde import edildiği için burada kullanılabilir.
-                    const querySnapshot = await getDocs(query(collectionRef, limit(1)));
-                    if (querySnapshot.empty) {
-                        console.log(`Simüle edilmiş geçmiş veri yükleniyor: ${regions[regionId]}`);
-                        for (let i = 0; i < MAX_DATA_POINTS; i++) {
-                            const date = new Date(Date.now() - (MAX_DATA_POINTS - 1 - i) * 60 * 1000); // Her dakika bir veri noktası
-                            const data = generateRandomSensorData(regionId);
-                            await setDoc(doc(collectionRef), { // doc() ile otomatik ID oluştur
-                                timestamp: date,
-                                co2: data.co2,
-                                mq135_value: data.mq135_value,
-                                light_value: data.light_value,
-                                temperature: data.temperature,
-                                humidity: data.humidity
-                            });
-                        }
-                        console.log(`${regions[regionId]} için simüle edilmiş geçmiş veri yüklendi.`);
-                    } else {
-                        console.log(`${regions[regionId]} için simüle edilmiş geçmiş veri zaten mevcut.`);
+            const createChart = (ctx, type, datasets, title) => {
+                return new Chart(ctx, {
+                    type: type,
+                    data: { labels: [], datasets: datasets },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: {
+                            x: { type: 'time', time: { unit: 'second', displayFormats: { second: 'HH:mm:ss' } }, ticks: { maxRotation: 0, minRotation: 0, autoSkip: true, maxTicksLimit: 7 }},
+                            y: { beginAtZero: true }
+                        },
+                        plugins: { legend: { display: true }, title: { display: false } }
                     }
+                });
+            };
+            
+            const tempHumidityCtx = document.getElementById('tempHumidityChart').getContext('2d');
+            const co2Ctx = document.getElementById('co2Chart').getContext('2d');
+
+            const tempHumidityChart = createChart(tempHumidityCtx, 'line', [
+                { label: 'Sıcaklık (°C)', data: [], borderColor: '#FF6B6B', tension: 0.1 },
+                { label: 'Nem (%)', data: [], borderColor: '#118AB2', tension: 0.1 }
+            ]);
+            const co2Chart = createChart(co2Ctx, 'line', [
+                { label: 'CO₂ (ppm)', data: [], borderColor: '#06D6A0', tension: 0.1, fill: { target: 'origin', above: 'rgba(6, 214, 160, 0.1)'} }
+            ]);
+
+            function updateChart(chart, newData) {
+                const maxDataPoints = 30;
+                if (chart.data.labels.length >= maxDataPoints) {
+                    chart.data.labels.shift();
+                    chart.data.datasets.forEach(dataset => dataset.data.shift());
                 }
+                chart.data.labels.push(newData.x);
+                newData.y.forEach((yValue, index) => {
+                    chart.data.datasets[index].data.push(yValue);
+                });
+                chart.update();
             }
 
-            // Simüle edilmiş sensör verisi üreten fonksiyon
-            function generateRandomSensorData(regionId) {
-                let co2, mq135_value, light_value, temperature, humidity;
+            function startRealtimeListeners() {
+                // *** DÜZELTME: Sabit ve doğru belge yolunu dinle ***
+                const liveDataRef = doc(db, "artifacts/default-app-id/public/data/sensors/current_data");
+                
+                onSnapshot(liveDataRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        
+                        // Firestore REST API formatından veri okuma
+                        const co2 = data.co2?.integerValue || data.co2?.doubleValue || '---';
+                        const mq135 = data.mq135_value?.integerValue || data.mq135_value?.doubleValue || '---';
+                        const light = data.light_value?.integerValue || data.light_value?.doubleValue || '---';
+                        const temp = data.temperature?.doubleValue || data.temperature?.integerValue || '--';
+                        const hum = data.humidity?.doubleValue || data.humidity?.integerValue || '--';
+                        const timestamp = data.timestamp?.timestampValue ? new Date(data.timestamp.timestampValue) : new Date();
 
-                switch (regionId) {
-                    case 'kahramanmaras':
-                        co2 = Math.floor(Math.random() * (1200 - 600 + 1)) + 600; // Yüksek CO2
-                        mq135_value = Math.floor(Math.random() * (350 - 180 + 1)) + 180; // Orta-yüksek hava kirliliği
-                        light_value = Math.floor(Math.random() * (800 - 200 + 1)) + 200; // Değişken ışık
-                        temperature = (Math.random() * (28 - 18) + 18).toFixed(1); // Ilıman sıcaklık
-                        humidity = (Math.random() * (70 - 45) + 45).toFixed(1); // Orta nem
-                        break;
-                    case 'hatay':
-                        co2 = Math.floor(Math.random() * (1500 - 700 + 1)) + 700; // Çok yüksek CO2
-                        mq135_value = Math.floor(Math.random() * (450 - 250 + 1)) + 250; // Yüksek hava kirliliği
-                        light_value = Math.floor(Math.random() * (900 - 300 + 1)) + 300; // Yüksek ışık
-                        temperature = (Math.random() * (32 - 20) + 20).toFixed(1); // Yüksek sıcaklık
-                        humidity = (Math.random() * (80 - 50) + 50).toFixed(1); // Yüksek nem
-                        break;
-                    case 'gaziantep':
-                        co2 = Math.floor(Math.random() * (1000 - 500 + 1)) + 500; // Orta CO2
-                        mq135_value = Math.floor(Math.random() * (300 - 150 + 1)) + 150; // Orta hava kirliliği
-                        light_value = Math.floor(Math.random() * (700 - 150 + 1)) + 150; // Orta ışık
-                        temperature = (Math.random() * (25 - 15) + 15).toFixed(1); // Daha serin sıcaklık
-                        humidity = (Math.random() * (60 - 35) + 35).toFixed(1); // Düşük-orta nem
-                        break;
-                    case 'adiyaman':
-                        co2 = Math.floor(Math.random() * (1100 - 550 + 1)) + 550; // Orta-yüksek CO2
-                        mq135_value = Math.floor(Math.random() * (380 - 190 + 1)) + 190; // Orta-yüksek hava kirliliği
-                        light_value = Math.floor(Math.random() * (850 - 250 + 1)) + 250; // Değişken ışık
-                        temperature = (Math.random() * (30 - 17) + 17).toFixed(1); // Ilıman-yüksek sıcaklık
-                        humidity = (Math.random() * (75 - 40) + 40).toFixed(1); // Orta-yüksek nem
-                        break;
-                    default: // Canlı veri için varsayılan
-                        co2 = Math.floor(Math.random() * (700 - 350 + 1)) + 350;
-                        mq135_value = Math.floor(Math.random() * (250 - 100 + 1)) + 100;
-                        light_value = Math.floor(Math.random() * (600 - 100 + 1)) + 100;
-                        temperature = (Math.random() * (27 - 20) + 20).toFixed(1);
-                        humidity = (Math.random() * (65 - 30) + 30).toFixed(1);
-                }
-                return { co2, mq135_value, light_value, temperature, humidity };
+                        // KPI'ları güncelle
+                        document.getElementById('kpi-co2').innerHTML = `${co2} <span class="text-lg">ppm</span>`;
+                        document.getElementById('kpi-mq135').textContent = mq135 !== '---' ? (parseInt(mq135) < 300 ? 'İyi' : 'Kontrol') : '---';
+                        document.getElementById('kpi-light').innerHTML = `${light} <span class="text-lg">lux</span>`;
+                        document.getElementById('kpi-temp').innerHTML = `${parseFloat(temp).toFixed(1)} <span class="text-lg">°C</span>`;
+                        document.getElementById('kpi-humidity').innerHTML = `${parseFloat(hum).toFixed(1)} <span class="text-lg">%</span>`;
+
+                        // Grafikleri güncelle
+                        updateChart(tempHumidityChart, { x: timestamp, y: [temp, hum] });
+                        updateChart(co2Chart, { x: timestamp, y: [co2] });
+
+                    } else {
+                        showMessage("Canlı veri kaynağı bekleniyor... Cihazın veri gönderdiğinden emin olun.", 5000);
+                    }
+                }, (error) => {
+                    console.error("Firebase dinleme hatası:", error);
+                    showMessage("Canlı veri akışında bir sorun oluştu.");
+                });
             }
 
-            // CSV İndirme İşlevi
-            const downloadCsvBtn = document.getElementById('download-csv-btn');
-            if (downloadCsvBtn) {
-                downloadCsvBtn.addEventListener('click', exportToCsv);
-            }
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
 
-            function exportToCsv() {
-                let dataToExport = [];
-                if (currentViewMode === 'live') {
-                    dataToExport = sensorDataHistory;
-                } else {
-                    dataToExport = historicalDataCache[regionSelect.value] || [];
-                }
-
-                if (dataToExport.length === 0) {
-                    showMessage("Dışa aktarılacak veri bulunamadı.");
-                    return;
-                }
-
-                const headers = ["Timestamp", "CO2 (ppm)", "Hava Kalitesi (MQ135 mV)", "Işık (lux)", "Sıcaklık (°C)", "Nem (%)"];
-                let csvContent = headers.join(",") + "\n";
-
-                dataToExport.forEach(row => {
-                    const timestamp = row.timestamp ? new Date(row.timestamp).toLocaleString('tr-TR') : '';
-                    const values = [
-                        row.co2,
-                        row.mq135_value,
-                        row.light_value,
-                        row.temperature,
-                        row.humidity
-                    ];
-                    csvContent += [timestamp, ...values].join(",") + "\n";
+            window.addEventListener('scroll', () => {
+                let current = 'hero';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (window.pageYOffset >= sectionTop - 75) {
+                        current = section.getAttribute('id');
+                    }
                 });
 
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
-                if (link.download !== undefined) {
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute('href', url);
-                    link.setAttribute('download', `${currentViewMode === 'live' ? 'canli_veri' : regionSelect.value}_sensor_verileri.csv`);
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                    showMessage("Veriler CSV olarak dışa aktarıldı!");
-                } else {
-                    showMessage("Tarayıcınız CSV dışa aktarımı desteklemiyor.");
-                }
-            }
-
-            // Sayfa yüklendiğinde grafikleri başlat ve ilk veri dinlemeyi başlat
-            initializeCharts();
-            // Auth sonrası başlatma startDataListening() içinde zaten var.
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.href.includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
         });
     </script>
 </body>
