@@ -280,119 +280,109 @@
     
     <div id="message-box" class="message-box"></div>
 
-    <script type="module">
-        // Gerekli Firebase kütüphanelerini içe aktar
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+   <script type="module">
+    // Gerekli Firebase kütüphanelerini içe aktar
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        document.addEventListener('DOMContentLoaded', function () {
-            
-            // TAMAMEN DOĞRU VE ÇALIŞAN firebaseConfig
-            const firebaseConfig = {
-                apiKey: "AIzaSyBvJNWLHjMqlhAdZXSBqHQuPNnnImNZd4Q",
-                authDomain: "biqalgco2-hava-istasyonu.firebaseapp.com",
-                databaseURL: "https://biqalgco2-hava-istasyonu-default-rtdb.firebaseio.com",
-                projectId: "biqalgco2-hava-istasyonu",
-                storageBucket: "biqalgco2-hava-istasyonu.appspot.com",
-                messagingSenderId: "1014289654311",
-                appId: "1:1014289654311:web:e37e2a3ffe78a3cc4ba402"
-            };
-            
-            // Değişkenler
-            let db, auth;
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyBvJNWLHjMqlhAdZXSBqHQuPNnnImNZd4Q",
+            authDomain: "biqalgco2-hava-istasyonu.firebaseapp.com",
+            databaseURL: "https://biqalgco2-hava-istasyonu-default-rtdb.firebaseio.com",
+            projectId: "biqalgco2-hava-istasyonu",
+            storageBucket: "biqalgco2-hava-istasyonu.appspot.com",
+            messagingSenderId: "1014289654311",
+            appId: "1:1014289654311:web:e37e2a3ffe78a3cc4ba402"
+        };
+        
+        let db;
 
-            function showMessage(message, duration = 3000) {
-                const messageBox = document.getElementById('message-box');
-                if (!messageBox) return;
-                messageBox.textContent = message;
-                messageBox.classList.add('show');
-                setTimeout(() => {
-                    messageBox.classList.remove('show');
-                }, duration);
-            }
-
-            // Firebase'i başlat
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-            } catch(e) {
-                console.error("Firebase başlatma hatası:", e);
-                showMessage("Uygulama başlatılamadı. Lütfen sayfayı yenileyin.");
-                return;
-            }
-            
-            // Anonim giriş yap ve veri dinlemeyi başlat
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            const auth = getAuth(app);
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    console.log("Kullanıcı anonim olarak oturum açtı:", user.uid);
                     startRealtimeListeners();
                 } else {
-                    signInAnonymously(auth).catch((error) => {
-                        console.error("Anonim kimlik doğrulama hatası:", error);
-                        let userMessage = "Canlı verilere bağlanılamadı.";
-                        if (error.code === 'auth/operation-not-allowed') {
-                            userMessage = "HATA: Anonim giriş projenizde etkin değil. Lütfen Firebase Console > Authentication > Sign-in method'dan 'Anonim'i etkinleştirin.";
-                        }
-                        showMessage(userMessage, 10000);
-                    });
+                    signInAnonymously(auth);
+                }
+            });
+        } catch(e) { console.error("Firebase başlatma hatası:", e); }
+        
+
+        // --- GRAFİK AYARLARI ---
+        const createChart = (ctx, type, datasets) => new Chart(ctx, { type: type, data: { labels: [], datasets: datasets }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'second', displayFormats: { second: 'HH:mm:ss' } }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 }}, y: { beginAtZero: false } }, plugins: { legend: { display: true } } } });
+        const tempHumidityCtx = document.getElementById('tempHumidityChart')?.getContext('2d');
+        const co2Ctx = document.getElementById('co2Chart')?.getContext('2d');
+        let tempHumidityChart = tempHumidityCtx ? createChart(tempHumidityCtx, 'line', [{ label: 'Sıcaklık (°C)', data: [], borderColor: '#FF6B6B', tension: 0.2 }, { label: 'Nem (%)', data: [], borderColor: '#118AB2', tension: 0.2 }]) : null;
+        let co2Chart = co2Ctx ? createChart(co2Ctx, 'line', [{ label: 'CO₂ (ppm)', data: [], borderColor: '#06D6A0', tension: 0.2, fill: { target: 'origin', above: 'rgba(6, 214, 160, 0.1)'} }]) : null;
+        
+        function updateAllCharts(historyData) {
+            if (!historyData || historyData.length === 0) return;
+            const labels = [], tempData = [], humData = [], co2Data = [];
+
+            historyData.forEach(dataPoint => {
+                labels.push(new Date(dataPoint.timestamp.timestampValue));
+                tempData.push(dataPoint.temperature.doubleValue);
+                humData.push(dataPoint.humidity.doubleValue);
+                co2Data.push(dataPoint.co2.doubleValue);
+            });
+            
+            if (tempHumidityChart) {
+                tempHumidityChart.data.labels = labels;
+                tempHumidityChart.data.datasets[0].data = tempData;
+                tempHumidityChart.data.datasets[1].data = humData;
+                tempHumidityChart.update('none');
+            }
+            if (co2Chart) {
+                co2Chart.data.labels = labels;
+                co2Chart.data.datasets[0].data = co2Data;
+                co2Chart.update('none');
+            }
+        }
+
+        function startRealtimeListeners() {
+            // 1. Anlık KPI kartları için dinleyici
+            const liveDataRef = doc(db, "artifacts/default-app-id/public/data/sensors/current_data");
+            onSnapshot(liveDataRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const fields = docSnap.data().fields;
+                    const temp = fields.temperature?.doubleValue || '--';
+                    const hum = fields.humidity?.doubleValue || '--';
+                    const co2 = fields.co2?.doubleValue || '---';
+                    const mq135 = fields.mq135_value?.doubleValue || '---';
+                    const light = fields.light_value?.doubleValue || '---';
+
+                    document.getElementById('kpi-co2').innerHTML = `${co2} <span class="text-lg">ppm</span>`;
+                    document.getElementById('kpi-mq135').textContent = mq135 !== '---' ? (parseInt(mq135) < 300 ? 'İyi' : 'Kontrol') : '---';
+                    document.getElementById('kpi-light').innerHTML = `${light} <span class="text-lg">lux</span>`;
+                    document.getElementById('kpi-temp').innerHTML = `${parseFloat(temp).toFixed(1)} <span class="text-lg">°C</span>`;
+                    document.getElementById('kpi-humidity').innerHTML = `${parseFloat(hum).toFixed(1)} <span class="text-lg">%</span>`;
                 }
             });
 
-            // Grafik kodları
-            const createChart = (ctx, type, datasets) => { return new Chart(ctx, { type: type, data: { labels: [], datasets: datasets }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'second', displayFormats: { second: 'HH:mm:ss' } }, ticks: { maxRotation: 0, minRotation: 0, autoSkip: true, maxTicksLimit: 7 }}, y: { beginAtZero: false } }, plugins: { legend: { display: true }, title: { display: false } } } }); };
-            const tempHumidityCtx = document.getElementById('tempHumidityChart')?.getContext('2d');
-            const co2Ctx = document.getElementById('co2Chart')?.getContext('2d');
-            let tempHumidityChart, co2Chart;
-            if (tempHumidityCtx) {
-                tempHumidityChart = createChart(tempHumidityCtx, 'line', [{ label: 'Sıcaklık (°C)', data: [], borderColor: '#FF6B6B', tension: 0.1 }, { label: 'Nem (%)', data: [], borderColor: '#118AB2', tension: 0.1 }]);
-            }
-            if(co2Ctx) {
-                co2Chart = createChart(co2Ctx, 'line', [{ label: 'CO₂ (ppm)', data: [], borderColor: '#06D6A0', tension: 0.1, fill: { target: 'origin', above: 'rgba(6, 214, 160, 0.1)'} }]);
-            }
-            function updateChart(chart, newData) { if(!chart) return; const maxDataPoints = 30; if (chart.data.labels.length >= maxDataPoints) { chart.data.labels.shift(); chart.data.datasets.forEach(dataset => dataset.data.shift()); } chart.data.labels.push(newData.x); newData.y.forEach((yValue, index) => { chart.data.datasets[index].data.push(yValue); }); chart.update(); }
-
-            // Firestore verisini dinleyen ve sayfayı güncelleyen ana fonksiyon
-            function startRealtimeListeners() {
-                const liveDataRef = doc(db, "artifacts/default-app-id/public/data/sensors/current_data");
-                
-                onSnapshot(liveDataRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        // DOĞRU VERİ OKUMA YÖNTEMİ
-                        const data = docSnap.data(); 
-
-                        const co2 = data.co2 || '---';
-                        const mq135 = data.mq135_value || '---';
-                        const light = data.light_value || '---';
-                        const temp = data.temperature || '--';
-                        const hum = data.humidity || '--';
-                        // Arduino'dan gelen timestamp string ise Date nesnesine çevir
-                        const timestamp = data.timestamp ? new Date(data.timestamp) : new Date();
-
-                        document.getElementById('kpi-co2').innerHTML = `${co2} <span class="text-lg">ppm</span>`;
-                        document.getElementById('kpi-mq135').textContent = mq135 !== '---' ? (parseInt(mq135) < 300 ? 'İyi' : 'Kontrol') : '---';
-                        document.getElementById('kpi-light').innerHTML = `${light} <span class="text-lg">lux</span>`;
-                        document.getElementById('kpi-temp').innerHTML = `${parseFloat(temp).toFixed(1)} <span class="text-lg">°C</span>`;
-                        document.getElementById('kpi-humidity').innerHTML = `${parseFloat(hum).toFixed(1)} <span class="text-lg">%</span>`;
-
-                        if (temp !== '--' && hum !== '--' && tempHumidityChart) { updateChart(tempHumidityChart, { x: timestamp, y: [temp, hum] }); }
-                        if (co2 !== '---' && co2Chart) { updateChart(co2Chart, { x: timestamp, y: [co2] }); }
-                    } else {
-                        showMessage("Canlı veri kaynağı bekleniyor...", 5000);
-                    }
-                }, (error) => {
-                    console.error("Firebase dinleme hatası:", error);
-                    showMessage("Canlı veri akışında bir sorun oluştu.");
-                });
-            }
+            // 2. Grafik için geçmiş verisini dinleyen sorgu
+            const historyCollectionRef = collection(db, "artifacts/default-app-id/public/data/sensor_history");
             
-            // Sayfa kaydırma ile menü aktifliğini sağlayan kodlar
-            const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('main section');
-            window.addEventListener('scroll', () => { let current = 'hero'; sections.forEach(section => { const sectionTop = section.offsetTop; if (window.pageYOffset >= sectionTop - 75) { current = section.getAttribute('id'); } }); navLinks.forEach(link => { link.classList.remove('active'); if (link.href.includes(current)) { link.classList.add('active'); } }); });
-        });
-    </script>
+            // =================================================================
+            // === DEĞİŞİKLİK BURADA: limit(30) yerine limit(10) kullanıldı ===
+            const historyQuery = query(historyCollectionRef, orderBy("timestamp", "desc"), limit(10));
+            // =================================================================
+            
+            onSnapshot(historyQuery, (querySnapshot) => {
+                const historyData = [];
+                querySnapshot.forEach((doc) => {
+                    historyData.push(doc.data().fields);
+                });
+                updateAllCharts(historyData.reverse());
+            });
+        }
+    });
+</script>
     
 </body>
 </html>
