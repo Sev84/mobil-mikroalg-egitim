@@ -290,7 +290,17 @@
 
         document.addEventListener('DOMContentLoaded', async function () {
             
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+            const firebaseConfig = typeof __firebase_config !== 'undefined' 
+                ? JSON.parse(__firebase_config) 
+                : {
+                    apiKey: "AIzaSyBvJNWLHjMqlhAdZXSBqHQuPNnnImNZd4Q",
+                    authDomain: "biqalgco2-hava-istasyonu.firebaseapp.com",
+                    projectId: "biqalgco2-hava-istasyonu",
+                    storageBucket: "biqalgco2-hava-istasyonu.appspot.com",
+                    messagingSenderId: "1014289654311",
+                    appId: "1:1014289654311:web:e37e2a3ff070a3cc4ba402"
+                  };
+            
             let db, auth;
 
             function showMessage(message, duration = 3000) {
@@ -326,7 +336,11 @@
                         }
                     } catch (error) {
                         console.error("Kimlik doğrulama hatası:", error);
-                        showMessage("Canlı verilere bağlanılamadı.");
+                        let userMessage = "Canlı verilere bağlanılamadı. Lütfen Firebase ayarlarınızı kontrol edin.";
+                        if (error.code === 'auth/operation-not-allowed') {
+                             userMessage = "HATA: Anonim giriş (Anonymous) Firebase projenizde etkinleştirilmemiş. Lütfen Firebase Console > Authentication > Sign-in method sekmesinden 'Anonim' sağlayıcısını etkinleştirin.";
+                        }
+                        showMessage(userMessage, 10000);
                     }
                 }
             });
@@ -393,9 +407,8 @@
                 
                 onSnapshot(liveDataRef, (docSnap) => {
                     if (docSnap.exists()) {
-                        const data = docSnap.data().fields; // DÜZELTME: Veriyi 'fields' nesnesinin içinden al
+                        const data = docSnap.data().fields; 
 
-                        // Firestore REST API formatından veri okuma
                         const co2 = data.co2?.integerValue || data.co2?.doubleValue || '---';
                         const mq135 = data.mq135_value?.integerValue || data.mq135_value?.doubleValue || '---';
                         const light = data.light_value?.integerValue || data.light_value?.doubleValue || '---';
@@ -403,14 +416,12 @@
                         const hum = data.humidity?.doubleValue || data.humidity?.integerValue || '--';
                         const timestamp = data.timestamp?.timestampValue ? new Date(data.timestamp.timestampValue) : new Date();
 
-                        // KPI'ları güncelle
                         document.getElementById('kpi-co2').innerHTML = `${co2} <span class="text-lg">ppm</span>`;
                         document.getElementById('kpi-mq135').textContent = mq135 !== '---' ? (parseInt(mq135) < 300 ? 'İyi' : 'Kontrol') : '---';
                         document.getElementById('kpi-light').innerHTML = `${light} <span class="text-lg">lux</span>`;
                         document.getElementById('kpi-temp').innerHTML = `${parseFloat(temp).toFixed(1)} <span class="text-lg">°C</span>`;
                         document.getElementById('kpi-humidity').innerHTML = `${parseFloat(hum).toFixed(1)} <span class="text-lg">%</span>`;
 
-                        // Grafikleri güncelle
                         updateChart(tempHumidityChart, { x: timestamp, y: [temp, hum] });
                         updateChart(co2Chart, { x: timestamp, y: [co2] });
 
@@ -446,3 +457,4 @@
     </script>
 </body>
 </html>
+
