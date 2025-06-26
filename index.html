@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIQ-Alg 0CO2: Canlı Veri Paneli</title>
+    <title>BIQ-Alg 0CO2: Afet Bölgesi İçin İnovatif Hava Çözümü</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,10 +13,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Roboto', sans-serif; background-color: #f8f9fa; color: #073B4C; }
-        .font-heading { font-family: 'Montserrat', sans-serif; }
-        .chart-container { position: relative; width: 100%; height: 320px; }
-        .kpi-card { background: #ffffff; border-radius: 0.75rem; padding: 1rem; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #073B4C; 
+        }
+        .font-heading {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .kpi-card {
+            background: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .nav-link.active {
+            color: #118AB2;
+            font-weight: 700;
+        }
+        .message-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #073B4C;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translate(-50%, 20px);
+        }
+        .message-box.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
     </style>
 </head>
 
@@ -24,20 +72,85 @@
 
     <header class="bg-white/95 backdrop-blur-sm sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <a href="#" class="flex items-center">
+            <a href="#hero" class="flex items-center">
                 <img src="logo111.png" alt="BIQ-Alg 0CO2 Proje Logosu" class="h-12 w-auto" onerror="this.onerror=null; this.src='https://placehold.co/150x50/FFFFFF/073B4C?text=BiQ-Alg+0CO2';">
             </a>
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Çözüm</a>
-                <a href="#" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Teknoloji</a>
-                <a href="#" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors active">Canlı Veri</a>
-                <a href="#" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Özet</a>
-                <a href="#" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Gelecek</a>
+                <a href="#problem-solution" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Çözüm</a>
+                <a href="#technology" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Teknoloji</a>
+                <a href="#live-data" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Canlı Veri</a>
+                <a href="#summary-table-section" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Özet</a>
+                <a href="#future" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Gelecek</a>
             </div>
         </nav>
     </header>
 
     <main>
+        <section id="hero" class="py-20 md:py-32" style="background: linear-gradient(135deg, #118AB2 0%, #06D6A0 100%);">
+            <div class="container mx-auto px-6 text-center text-white">
+                <h1 class="text-4xl md:text-6xl font-bold font-heading mb-4 tracking-tight">Afet Sonrası Temiz Nefes: <br> BIQ-Alg 0CO2</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90">
+                    Doğanın en güçlü savaşçıları olan mikroalgler ile afet bölgelerine anında hava kalitesi, sürdürülebilir enerji ve umut taşıyan mobil eğitim istasyonunu keşfedin.
+                </p>
+            </div>
+        </section>
+
+        <section id="problem-solution" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Görünmez Tehlikeye Karşı Biyolojik Kalkan</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Afetler, ardında sadece enkaz bırakmaz; aynı zamanda havayı kirleten tehlikeli partiküllerle doldurur. Geleneksel çözümler yetersiz kalırken, doğa bize çok daha güçlü bir alternatif sunuyor.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 items-center text-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="font-heading text-2xl font-bold text-[#FF6B6B] mb-3">GELENEKSEL YÖNTEMLER</h3>
+                        <p class="text-gray-600">Enerji yoğun, maliyetli ve sadece partikül filtreler. CO₂ yakalama veya O₂ üretme yetenekleri yoktur.</p>
+                    </div>
+                    <div class="p-8">
+                         <div class="text-6xl md:text-8xl font-black text-[#118AB2] font-heading">50x</div>
+                         <p class="font-bold text-xl mt-2 text-[#073B4C]">DAHA VERİMLİ</p>
+                         <p class="text-gray-600 mt-1">Mikroalgler, karasal bitkilere göre 10 ila 50 kat daha verimli CO₂ yakalar.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="font-heading text-2xl font-bold text-[#06D6A0] mb-3">MİKROALG ÇÖZÜMÜ</h3>
+                        <p class="text-gray-600">Havayı temizler, oksijen üretir ve döngüsel ekonomi için değerli biyokütle oluşturur.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="technology" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Hava Arıtmanın Kalbi: Fotobiyoreaktör (FBR) Teknolojileri</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Mikroalglerin gücünü en verimli şekilde kullanmak için farklı reaktör tasarımları mevcuttur. Her birinin kendine özgü avantajları ve performans metrikleri bulunur. Projemiz, mobilite ve verimliliği birleştiren Dikey Tübüler FBR tasarımını temel alır.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="chart-container">
+                        <canvas id="pbrPerformanceChart"></canvas>
+                    </div>
+                    <div id="pbr-info" class="space-y-4">
+                        <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300">
+                             <h3 class="text-xl font-bold font-heading mb-2 text-[#118AB2]">Dikey Tübüler FBR (Projemizin Seçimi)</h3>
+                            <p class="text-gray-600">Kompakt yapısıyla mobil uygulamalar için idealdir. Kontrollü ortamı sayesinde yüksek verimlilik ve stabilite sunar. Az yer kaplar ve afet bölgelerinde hızla kurulabilir.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 opacity-70">
+                             <h3 class="text-xl font-bold font-heading mb-2 text-[#073B4C]">Düz Panel FBR</h3>
+                            <p class="text-gray-600">Yüksek ışık verimliliği sağlar ancak genellikle daha büyük ve sabit kurulumlar için uygundur.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 opacity-70">
+                             <h3 class="text-xl font-bold font-heading mb-2 text-[#073B4C]">Açık Havuz Sistemleri</h3>
+                            <p class="text-gray-600">Düşük maliyetlidir ancak kirlenme riski yüksek ve verimliliği düşüktür.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="live-data" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
@@ -47,35 +160,139 @@
                     </p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8 text-center">
-                    <div class="kpi-card p-4 rounded-lg shadow-md"><h4 class="font-bold text-gray-500 text-sm">CO₂ SEVİYESİ</h4><p id="kpi-co2" class="text-3xl font-black text-[#118AB2] mt-1">--- <span class="text-lg">ppm</span></p></div>
-                    <div class="kpi-card p-4 rounded-lg shadow-md"><h4 class="font-bold text-gray-500 text-sm">HAVA KALİTESİ</h4><p id="kpi-mq135" class="text-3xl font-black text-[#06D6A0] mt-1">---</p></div>
-                    <div class="kpi-card p-4 rounded-lg shadow-md"><h4 class="font-bold text-gray-500 text-sm">IŞIK ŞİDDETİ</h4><p id="kpi-light" class="text-3xl font-black text-[#FFD166] mt-1">--- <span class="text-lg">lux</span></p></div>
-                    <div class="kpi-card p-4 rounded-lg shadow-md"><h4 class="font-bold text-gray-500 text-sm">SICAKLIK</h4><p id="kpi-temp" class="text-3xl font-black text-[#FF6B6B] mt-1">-- <span class="text-lg">°C</span></p></div>
-                    <div class="kpi-card p-4 rounded-lg shadow-md"><h4 class="font-bold text-gray-500 text-sm">NEM</h4><p id="kpi-humidity" class="text-3xl font-black text-[#118AB2] mt-1">-- <span class="text-lg">%</span></p></div>
+                    <div class="kpi-card p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-gray-500 text-sm">CO₂ SEVİYESİ</h4>
+                        <p id="kpi-co2" class="text-3xl font-black text-[#118AB2] mt-1">--- <span class="text-lg">ppm</span></p>
+                    </div>
+                    <div class="kpi-card p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-gray-500 text-sm">HAVA KALİTESİ</h4>
+                        <p id="kpi-mq135" class="text-3xl font-black text-[#06D6A0] mt-1">---</p>
+                    </div>
+                    <div class="kpi-card p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-gray-500 text-sm">IŞIK ŞİDDETİ</h4>
+                        <p id="kpi-light" class="text-3xl font-black text-[#FFD166] mt-1">--- <span class="text-lg">lux</span></p>
+                    </div>
+                    <div class="kpi-card p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-gray-500 text-sm">SICAKLIK</h4>
+                        <p id="kpi-temp" class="text-3xl font-black text-[#FF6B6B] mt-1">-- <span class="text-lg">°C</span></p>
+                    </div>
+                    <div class="kpi-card p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-gray-500 text-sm">NEM</h4>
+                        <p id="kpi-humidity" class="text-3xl font-black text-[#118AB2] mt-1">-- <span class="text-lg">%</span></p>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Sıcaklık ve Nem Trendi (Son 10 Okuma)</h3><div class="chart-container"><canvas id="tempHumidityChart"></canvas></div></div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi (Son 10 Okuma)</h3><div class="chart-container"><canvas id="co2Chart"></canvas></div></div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Sıcaklık ve Nem Trendi (Son 10 Okuma)</h3>
+                        <div class="chart-container" style="height: 300px; max-height: 300px;">
+                            <canvas id="tempHumidityChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi (Son 10 Okuma)</h3>
+                        <div class="chart-container" style="height: 300px; max-height: 300px;">
+                            <canvas id="co2Chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="summary-table-section" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Projenin Öne Çıkan Yönleri</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Aşağıdaki tablo, projemizin temel yeteneklerini ve topluma sağladığı çok yönlü faydaları özetlemektedir.
+                    </p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left rounded-lg shadow-lg overflow-hidden">
+                        <thead class="bg-[#118AB2] text-white">
+                            <tr>
+                                <th class="p-4 font-bold uppercase tracking-wider w-1/3">Özellik / Alan</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Açıklama ve Hedef</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Problem Odaklı Geliştirme</td>
+                                <td class="p-4 text-gray-700">Türkiye'de yaşanılan 6 Şubat deprem felaketindeki atmosfer verileri toplanmış ve sistemin geliştirilmesinde bu verilerden yararlanılmıştır.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Mobilite ve Anlık Analiz</td>
+                                <td class="p-4 text-gray-700">İstasyon mobil bir yapıdadır. Geliştirilen sistem, afet bölgesindeki atmosfer verilerini (CO₂, PM2.5 vb.) anlık olarak analiz eder, bölgedeki hava kalitesi hakkında bilgi verir ve bu verileri kayıt altına alır.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Çok Yönlü Fayda</td>
+                                <td class="p-4 text-gray-700">Sistem; afetzedeler için deneyimsel öğrenme ortamı oluşturur, hava kalitesini iyileştirir, ürettiği biyokütle ile döngüsel ekonomiye katkıda bulunur ve ürettiği oksijen ile daha sağlıklı bir yaşam ortamı sağlar.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Çift Amaçlı Yapı</td>
+                                <td class="p-4 text-gray-700">Projemiz, hem afet bölgesindeki hava kalitesini etkili bir şekilde iyileştirmekte hem de interaktif bir STEM eğitim istasyonu olarak görev görmektedir.</td>
+                            </tr>
+                             <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Canlı Veri İzleme</td>
+                                <td class="p-4 text-gray-700">CO₂, Hava Kalitesi, Işık, Sıcaklık ve Nem gibi kritik parametreler anlık olarak izlenir ve web arayüzünden takip edilebilir.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <section id="future" class="py-16 md:py-24">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Gelecek Vizyonumuz</h2>
+                     <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Bu proje, daha yeşil ve sağlıklı bir gelecek için sadece bir başlangıç.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-5xl mb-4">⚙️</div>
+                        <h3 class="text-xl font-bold font-heading mb-2 text-[#118AB2]">Teknoloji Geliştirme</h3>
+                        <p class="text-gray-600">Daha verimli ve dayanıklı alg türleri araştırmak, FBR tasarımlarını optimize etmek ve maliyetleri düşürmek.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-5xl mb-4">🌍</div>
+                        <h3 class="text-xl font-bold font-heading mb-2 text-[#06D6A0]">Yaygınlaştırma</h3>
+                        <p class="text-gray-600">Mobil üniteleri farklı afet senaryolarında test ederek kentsel alanlara ve okullara entegre etmek.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-5xl mb-4">🤝</div>
+                        <h3 class="text-xl font-bold font-heading mb-2 text-[#FFD166]">Ekonomik Model</h3>
+                        <p class="text-gray-600">Biyokütle yan ürünleri için pazar oluşturmak ve karbon kredisi gibi finansman modelleri geliştirmek.</p>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-[#073B4C] text-white py-8 mt-16">
-        <div class="container mx-auto px-6 text-center"><p>&copy; 2025 BIQ-Alg 0CO2 Projesi. Tüm Hakları Saklıdır.</p></div>
+    <footer class="bg-[#073B4C] text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 BIQ-Alg 0CO2 Projesi. Tüm Hakları Saklıdır.</p>
+            <p class="text-sm opacity-70 mt-2">Daha Yeşil Bir Gelecek İçin Biyoteknoloji.</p>
+        </div>
     </footer>
     
+    <div id="message-box" class="message-box"></div>
+
     <script type="module">
+        // Gerekli Firebase kütüphanelerini içe aktar
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         document.addEventListener('DOMContentLoaded', function () {
             
+            // TAMAMEN DOĞRU VE ÇALIŞAN firebaseConfig
             const firebaseConfig = {
                 apiKey: "AIzaSyBvJNWLHjMqlhAdZXSBqHQuPNnnImNZd4Q",
                 authDomain: "biqalgco2-hava-istasyonu.firebaseapp.com",
+                databaseURL: "https://biqalgco2-hava-istasyonu-default-rtdb.firebaseio.com",
                 projectId: "biqalgco2-hava-istasyonu",
                 storageBucket: "biqalgco2-hava-istasyonu.appspot.com",
                 messagingSenderId: "1014289654311",
@@ -83,12 +300,14 @@
             };
             
             let db;
+
             try {
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 const auth = getAuth(app);
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
+                        console.log("Oturum açıldı, dinleyiciler başlatılıyor...");
                         startRealtimeListeners();
                     } else {
                         signInAnonymously(auth);
@@ -96,18 +315,20 @@
                 });
             } catch(e) { console.error("Firebase başlatma hatası:", e); }
             
-            const createChart = (ctx, type, datasets) => new Chart(ctx, { type: type, data: { labels: [], datasets: datasets }, options: { responsive: true, maintainAspectRatio: false, animation: { duration: 400 }, scales: { x: { type: 'time', time: { unit: 'second', displayFormats: { second: 'HH:mm:ss' } }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 7 }}, y: { beginAtZero: false } }, plugins: { legend: { display: true } } } });
+
+            // --- GRAFİK AYARLARI ---
+            const createChart = (ctx, type, datasets) => new Chart(ctx, { type: type, data: { labels: [], datasets: datasets }, options: { animation: false, responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'second', displayFormats: { second: 'HH:mm:ss' } }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 }}, y: { beginAtZero: false } }, plugins: { legend: { display: true } } } });
             const tempHumidityCtx = document.getElementById('tempHumidityChart')?.getContext('2d');
             const co2Ctx = document.getElementById('co2Chart')?.getContext('2d');
             let tempHumidityChart = tempHumidityCtx ? createChart(tempHumidityCtx, 'line', [{ label: 'Sıcaklık (°C)', data: [], borderColor: '#FF6B6B', tension: 0.2 }, { label: 'Nem (%)', data: [], borderColor: '#118AB2', tension: 0.2 }]) : null;
             let co2Chart = co2Ctx ? createChart(co2Ctx, 'line', [{ label: 'CO₂ (ppm)', data: [], borderColor: '#06D6A0', tension: 0.2, fill: { target: 'origin', above: 'rgba(6, 214, 160, 0.1)'} }]) : null;
             
             function updateAllCharts(historyData) {
-                if (!historyData) return;
+                if (!historyData || historyData.length === 0) return;
                 const labels = [], tempData = [], humData = [], co2Data = [];
 
                 historyData.forEach(dataPoint => {
-                    if (dataPoint && dataPoint.timestamp) {
+                    if (dataPoint.timestamp) {
                         labels.push(dataPoint.timestamp.toDate());
                         tempData.push(dataPoint.temperature);
                         humData.push(dataPoint.humidity);
@@ -129,7 +350,7 @@
             }
 
             function startRealtimeListeners() {
-                // Anlık KPI kartları için dinleyici
+                // 1. Anlık KPI kartları için dinleyici
                 const liveDataRef = doc(db, "artifacts/default-app-id/public/data/sensors/current_data");
                 onSnapshot(liveDataRef, (docSnap) => {
                     if (docSnap.exists()) {
@@ -148,7 +369,7 @@
                     }
                 });
 
-                // Grafik için geçmiş verisini dinleyen sorgu
+                // 2. Grafik için geçmiş verisini dinleyen sorgu
                 const historyCollectionRef = collection(db, "artifacts/default-app-id/public/data/sensor_history");
                 const historyQuery = query(historyCollectionRef, orderBy("timestamp", "desc"), limit(10));
                 
@@ -160,6 +381,12 @@
                     updateAllCharts(historyData.reverse());
                 });
             }
+            
+            // Sayfa kaydırma ile menü aktifliğini sağlayan kodlar
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            window.addEventListener('scroll', () => { let current = "hero"; sections.forEach(section => { const sectionTop = section.offsetTop; if (window.pageYOffset >= sectionTop - 75) { current = section.getAttribute('id'); } }); navLinks.forEach(link => { link.classList.remove('active'); if (link.href.includes(current)) { link.classList.add('active'); } }); });
+        
         });
     </script>
 </body>
