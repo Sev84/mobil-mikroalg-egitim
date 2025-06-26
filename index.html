@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIQ-Alg 0CO2: Canlı Veri Paneli</title>
+    <title>BIQ-Alg 0CO2: Afet Bölgesi İçin İnovatif Hava Çözümü</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -78,7 +78,7 @@
             <div class="hidden md:flex items-center space-x-8">
                 <a href="#problem-solution" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Çözüm</a>
                 <a href="#technology" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Teknoloji</a>
-                <a href="#live-data" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors active">Canlı Veri</a>
+                <a href="#live-data" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Canlı Veri</a>
                 <a href="#summary-table-section" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Özet</a>
                 <a href="#future" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Gelecek</a>
             </div>
@@ -92,6 +92,62 @@
                 <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90">
                     Doğanın en güçlü savaşçıları olan mikroalgler ile afet bölgelerine anında hava kalitesi, sürdürülebilir enerji ve umut taşıyan mobil eğitim istasyonunu keşfedin.
                 </p>
+            </div>
+        </section>
+
+        <section id="problem-solution" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Görünmez Tehlikeye Karşı Biyolojik Kalkan</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Afetler, ardında sadece enkaz bırakmaz; aynı zamanda havayı kirleten tehlikeli partiküllerle doldurur. Geleneksel çözümler yetersiz kalırken, doğa bize çok daha güçlü bir alternatif sunuyor.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 items-center text-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="font-heading text-2xl font-bold text-[#FF6B6B] mb-3">GELENEKSEL YÖNTEMLER</h3>
+                        <p class="text-gray-600">Enerji yoğun, maliyetli ve sadece partikül filtreler. CO₂ yakalama veya O₂ üretme yetenekleri yoktur.</p>
+                    </div>
+                    <div class="p-8">
+                         <div class="text-6xl md:text-8xl font-black text-[#118AB2] font-heading">50x</div>
+                         <p class="font-bold text-xl mt-2 text-[#073B4C]">DAHA VERİMLİ</p>
+                         <p class="text-gray-600 mt-1">Mikroalgler, karasal bitkilere göre 10 ila 50 kat daha verimli CO₂ yakalar.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="font-heading text-2xl font-bold text-[#06D6A0] mb-3">MİKROALG ÇÖZÜMÜ</h3>
+                        <p class="text-gray-600">Havayı temizler, oksijen üretir ve döngüsel ekonomi için değerli biyokütle oluşturur.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="technology" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Hava Arıtmanın Kalbi: Fotobiyoreaktör (FBR) Teknolojileri</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Mikroalglerin gücünü en verimli şekilde kullanmak için farklı reaktör tasarımları mevcuttur. Her birinin kendine özgü avantajları ve performans metrikleri bulunur. Projemiz, mobilite ve verimliliği birleştiren Dikey Tübüler FBR tasarımını temel alır.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="chart-container">
+                        <canvas id="pbrPerformanceChart"></canvas>
+                    </div>
+                    <div id="pbr-info" class="space-y-4">
+                        <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300">
+                             <h3 class="text-xl font-bold font-heading mb-2 text-[#118AB2]">Dikey Tübüler FBR (Projemizin Seçimi)</h3>
+                            <p class="text-gray-600">Kompakt yapısıyla mobil uygulamalar için idealdir. Kontrollü ortamı sayesinde yüksek verimlilik ve stabilite sunar. Az yer kaplar ve afet bölgelerinde hızla kurulabilir.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 opacity-70">
+                             <h3 class="text-xl font-bold font-heading mb-2 text-[#073B4C]">Düz Panel FBR</h3>
+                            <p class="text-gray-600">Yüksek ışık verimliliği sağlar ancak genellikle daha büyük ve sabit kurulumlar için uygundur.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 opacity-70">
+                             <h3 class="text-xl font-bold font-heading mb-2 text-[#073B4C]">Açık Havuz Sistemleri</h3>
+                            <p class="text-gray-600">Düşük maliyetlidir ancak kirlenme riski yüksek ve verimliliği düşüktür.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -143,9 +199,79 @@
             </div>
         </section>
 
-        </main>
+        <section id="summary-table-section" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Projenin Öne Çıkan Yönleri</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Aşağıdaki tablo, projemizin temel yeteneklerini ve topluma sağladığı çok yönlü faydaları özetlemektedir.
+                    </p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left rounded-lg shadow-lg overflow-hidden">
+                        <thead class="bg-[#118AB2] text-white">
+                            <tr>
+                                <th class="p-4 font-bold uppercase tracking-wider w-1/3">Özellik / Alan</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Açıklama ve Hedef</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Problem Odaklı Geliştirme</td>
+                                <td class="p-4 text-gray-700">Türkiye'de yaşanılan 6 Şubat deprem felaketindeki atmosfer verileri toplanmış ve sistemin geliştirilmesinde bu verilerden yararlanılmıştır.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Mobilite ve Anlık Analiz</td>
+                                <td class="p-4 text-gray-700">İstasyon mobil bir yapıdadır. Geliştirilen sistem, afet bölgesindeki atmosfer verilerini (CO₂, PM2.5 vb.) anlık olarak analiz eder, bölgedeki hava kalitesi hakkında bilgi verir ve bu verileri kayıt altına alır.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Çok Yönlü Fayda</td>
+                                <td class="p-4 text-gray-700">Sistem; afetzedeler için deneyimsel öğrenme ortamı oluşturur, hava kalitesini iyileştirir, ürettiği biyokütle ile döngüsel ekonomiye katkıda bulunur ve ürettiği oksijen ile daha sağlıklı bir yaşam ortamı sağlar.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Çift Amaçlı Yapı</td>
+                                <td class="p-4 text-gray-700">Projemiz, hem afet bölgesindeki hava kalitesini etkili bir şekilde iyileştirmekte hem de interaktif bir STEM eğitim istasyonu olarak görev görmektedir.</td>
+                            </tr>
+                             <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Canlı Veri İzleme</td>
+                                <td class="p-4 text-gray-700">CO₂, Hava Kalitesi, Işık, Sıcaklık ve Nem gibi kritik parametreler anlık olarak izlenir ve web arayüzünden takip edilebilir.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <section id="future" class="py-16 md:py-24">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Gelecek Vizyonumuz</h2>
+                     <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Bu proje, daha yeşil ve sağlıklı bir gelecek için sadece bir başlangıç.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-5xl mb-4">⚙️</div>
+                        <h3 class="text-xl font-bold font-heading mb-2 text-[#118AB2]">Teknoloji Geliştirme</h3>
+                        <p class="text-gray-600">Daha verimli ve dayanıklı alg türleri araştırmak, FBR tasarımlarını optimize etmek ve maliyetleri düşürmek.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-5xl mb-4">🌍</div>
+                        <h3 class="text-xl font-bold font-heading mb-2 text-[#06D6A0]">Yaygınlaştırma</h3>
+                        <p class="text-gray-600">Mobil üniteleri farklı afet senaryolarında test ederek kentsel alanlara ve okullara entegre etmek.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                        <div class="text-5xl mb-4">🤝</div>
+                        <h3 class="text-xl font-bold font-heading mb-2 text-[#FFD166]">Ekonomik Model</h3>
+                        <p class="text-gray-600">Biyokütle yan ürünleri için pazar oluşturmak ve karbon kredisi gibi finansman modelleri geliştirmek.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <footer class="bg-[#073B4C] text-white py-8 mt-16">
+    <footer class="bg-[#073B4C] text-white py-8">
         <div class="container mx-auto px-6 text-center">
             <p>&copy; 2025 BIQ-Alg 0CO2 Projesi. Tüm Hakları Saklıdır.</p>
             <p class="text-sm opacity-70 mt-2">Daha Yeşil Bir Gelecek İçin Biyoteknoloji.</p>
@@ -209,4 +335,64 @@
                         if (error.code === 'auth/operation-not-allowed') {
                             userMessage = "HATA: Anonim giriş projenizde etkin değil. Lütfen Firebase Console > Authentication > Sign-in method'dan 'Anonim'i etkinleştirin.";
                         }
-                        showMessage(
+                        showMessage(userMessage, 10000);
+                    });
+                }
+            });
+
+            // Grafik kodları
+            const createChart = (ctx, type, datasets) => { return new Chart(ctx, { type: type, data: { labels: [], datasets: datasets }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'second', displayFormats: { second: 'HH:mm:ss' } }, ticks: { maxRotation: 0, minRotation: 0, autoSkip: true, maxTicksLimit: 7 }}, y: { beginAtZero: false } }, plugins: { legend: { display: true }, title: { display: false } } } }); };
+            const tempHumidityCtx = document.getElementById('tempHumidityChart')?.getContext('2d');
+            const co2Ctx = document.getElementById('co2Chart')?.getContext('2d');
+            let tempHumidityChart, co2Chart;
+            if (tempHumidityCtx) {
+                tempHumidityChart = createChart(tempHumidityCtx, 'line', [{ label: 'Sıcaklık (°C)', data: [], borderColor: '#FF6B6B', tension: 0.1 }, { label: 'Nem (%)', data: [], borderColor: '#118AB2', tension: 0.1 }]);
+            }
+            if(co2Ctx) {
+                co2Chart = createChart(co2Ctx, 'line', [{ label: 'CO₂ (ppm)', data: [], borderColor: '#06D6A0', tension: 0.1, fill: { target: 'origin', above: 'rgba(6, 214, 160, 0.1)'} }]);
+            }
+            function updateChart(chart, newData) { if(!chart) return; const maxDataPoints = 30; if (chart.data.labels.length >= maxDataPoints) { chart.data.labels.shift(); chart.data.datasets.forEach(dataset => dataset.data.shift()); } chart.data.labels.push(newData.x); newData.y.forEach((yValue, index) => { chart.data.datasets[index].data.push(yValue); }); chart.update(); }
+
+            // Firestore verisini dinleyen ve sayfayı güncelleyen ana fonksiyon
+            function startRealtimeListeners() {
+                const liveDataRef = doc(db, "artifacts/default-app-id/public/data/sensors/current_data");
+                
+                onSnapshot(liveDataRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        // DOĞRU VERİ OKUMA YÖNTEMİ
+                        const data = docSnap.data(); 
+
+                        const co2 = data.co2 || '---';
+                        const mq135 = data.mq135_value || '---';
+                        const light = data.light_value || '---';
+                        const temp = data.temperature || '--';
+                        const hum = data.humidity || '--';
+                        // Arduino'dan gelen timestamp string ise Date nesnesine çevir
+                        const timestamp = data.timestamp ? new Date(data.timestamp) : new Date();
+
+                        document.getElementById('kpi-co2').innerHTML = `${co2} <span class="text-lg">ppm</span>`;
+                        document.getElementById('kpi-mq135').textContent = mq135 !== '---' ? (parseInt(mq135) < 300 ? 'İyi' : 'Kontrol') : '---';
+                        document.getElementById('kpi-light').innerHTML = `${light} <span class="text-lg">lux</span>`;
+                        document.getElementById('kpi-temp').innerHTML = `${parseFloat(temp).toFixed(1)} <span class="text-lg">°C</span>`;
+                        document.getElementById('kpi-humidity').innerHTML = `${parseFloat(hum).toFixed(1)} <span class="text-lg">%</span>`;
+
+                        if (temp !== '--' && hum !== '--' && tempHumidityChart) { updateChart(tempHumidityChart, { x: timestamp, y: [temp, hum] }); }
+                        if (co2 !== '---' && co2Chart) { updateChart(co2Chart, { x: timestamp, y: [co2] }); }
+                    } else {
+                        showMessage("Canlı veri kaynağı bekleniyor...", 5000);
+                    }
+                }, (error) => {
+                    console.error("Firebase dinleme hatası:", error);
+                    showMessage("Canlı veri akışında bir sorun oluştu.");
+                });
+            }
+            
+            // Sayfa kaydırma ile menü aktifliğini sağlayan kodlar
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            window.addEventListener('scroll', () => { let current = 'hero'; sections.forEach(section => { const sectionTop = section.offsetTop; if (window.pageYOffset >= sectionTop - 75) { current = section.getAttribute('id'); } }); navLinks.forEach(link => { link.classList.remove('active'); if (link.href.includes(current)) { link.classList.add('active'); } }); });
+        });
+    </script>
+    
+</body>
+</html>
