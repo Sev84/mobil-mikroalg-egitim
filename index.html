@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIQ-Alg 0CO2: Afet Bölgesi İçin İnovatif Hava Çözümü</title>
+    <title>BIQ-Alg 0CO2: Hava Kalitesi Paneli</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,58 +13,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            color: #073B4C; 
-        }
-        .font-heading {
-            font-family: 'Montserrat', sans-serif;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 550px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 320px;
-            max-height: 450px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
-            }
-        }
-        .kpi-card {
-            background: #ffffff;
-            border-radius: 0.75rem;
-            padding: 1rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-        .nav-link.active {
-            color: #118AB2;
-            font-weight: 700;
-        }
-        .message-box {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #073B4C;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
-            transform: translate(-50%, 20px);
-        }
-        .message-box.show {
-            opacity: 1;
-            transform: translate(-50%, 0);
-        }
+        body { font-family: 'Roboto', sans-serif; background-color: #f8f9fa; color: #073B4C; }
+        .font-heading { font-family: 'Montserrat', sans-serif; }
+        .chart-container { position: relative; width: 100%; max-width: 550px; margin: auto; height: 320px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .kpi-card { background: #ffffff; border-radius: 0.75rem; padding: 1rem; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .nav-link.active { color: #118AB2; font-weight: 700; }
     </style>
 </head>
 
@@ -79,6 +33,7 @@
                 <a href="#problem-solution" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Çözüm</a>
                 <a href="#technology" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Teknoloji</a>
                 <a href="#live-data" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Canlı Veri</a>
+                <a href="#city-comparison" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Karşılaştırma</a>
                 <a href="#summary-table-section" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Özet</a>
                 <a href="#future" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Gelecek</a>
             </div>
@@ -154,52 +109,53 @@
         <section id="live-data" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Canlı Veri İzleme Paneli</h2>
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Cihazdan Gelen Canlı Veriler</h2>
                     <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
-                        BIQ-Alg 0CO2 istasyonundan gelen gerçek zamanlı sensör verilerini buradan takip edin. Bu panel, sistemin anlık performansını ve çevre koşullarını gösterir.
+                        BIQ-Alg 0CO2 istasyonundan gelen gerçek zamanlı sensör verilerini buradan takip edin.
                     </p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8 text-center">
-                    <div class="kpi-card p-4 rounded-lg shadow-md">
-                        <h4 class="font-bold text-gray-500 text-sm">CO₂ SEVİYESİ</h4>
-                        <p id="kpi-co2" class="text-3xl font-black text-[#118AB2] mt-1">--- <span class="text-lg">ppm</span></p>
-                    </div>
-                    <div class="kpi-card p-4 rounded-lg shadow-md">
-                        <h4 class="font-bold text-gray-500 text-sm">HAVA KALİTESİ</h4>
-                        <p id="kpi-mq135" class="text-3xl font-black text-[#06D6A0] mt-1">---</p>
-                    </div>
-                    <div class="kpi-card p-4 rounded-lg shadow-md">
-                        <h4 class="font-bold text-gray-500 text-sm">IŞIK ŞİDDETİ</h4>
-                        <p id="kpi-light" class="text-3xl font-black text-[#FFD166] mt-1">--- <span class="text-lg">lux</span></p>
-                    </div>
-                    <div class="kpi-card p-4 rounded-lg shadow-md">
-                        <h4 class="font-bold text-gray-500 text-sm">SICAKLIK</h4>
-                        <p id="kpi-temp" class="text-3xl font-black text-[#FF6B6B] mt-1">-- <span class="text-lg">°C</span></p>
-                    </div>
-                    <div class="kpi-card p-4 rounded-lg shadow-md">
-                        <h4 class="font-bold text-gray-500 text-sm">NEM</h4>
-                        <p id="kpi-humidity" class="text-3xl font-black text-[#118AB2] mt-1">-- <span class="text-lg">%</span></p>
-                    </div>
+                    <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">CO₂ SEVİYESİ</h4><p id="kpi-co2" class="text-3xl font-black text-[#118AB2] mt-1">--- <span class="text-lg">ppm</span></p></div>
+                    <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">HAVA KALİTESİ</h4><p id="kpi-mq135" class="text-3xl font-black text-[#06D6A0] mt-1">---</p></div>
+                    <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">IŞIK ŞİDDETİ</h4><p id="kpi-light" class="text-3xl font-black text-[#FFD166] mt-1">--- <span class="text-lg">lux</span></p></div>
+                    <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">SICAKLIK</h4><p id="kpi-temp" class="text-3xl font-black text-[#FF6B6B] mt-1">-- <span class="text-lg">°C</span></p></div>
+                    <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">NEM</h4><p id="kpi-humidity" class="text-3xl font-black text-[#118AB2] mt-1">-- <span class="text-lg">%</span></p></div>
                 </div>
-
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white p-6 rounded-xl shadow-lg">
-                        <h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Sıcaklık ve Nem Trendi (Son 10 Okuma)</h3>
-                        <div class="chart-container" style="height: 300px; max-height: 300px;">
-                            <canvas id="tempHumidityChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg">
-                        <h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi (Son 10 Okuma)</h3>
-                        <div class="chart-container" style="height: 300px; max-height: 300px;">
-                            <canvas id="co2Chart"></canvas>
-                        </div>
-                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Sıcaklık ve Nem Trendi (Son 10 Okuma)</h3><div class="chart-container" style="height: 300px;"><canvas id="tempHumidityChart"></canvas></div></div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi (Son 10 Okuma)</h3><div class="chart-container" style="height: 300px;"><canvas id="co2Chart"></canvas></div></div>
                 </div>
             </div>
         </section>
+        
+        <section id="city-comparison" class="py-16 md:py-24 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Deprem Bölgeleri Hava Kalitesi Karşılaştırması</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        Cihazınızın ölçtüğü anlık değerleri, Türkiye'nin farklı illerindeki genel hava kalitesi indeksi (HKİ) ile karşılaştırın.
+                    </p>
+                </div>
+                <div class="overflow-x-auto bg-white rounded-xl shadow-lg">
+                    <table class="w-full text-left">
+                        <thead class="bg-[#073B4C] text-white">
+                            <tr>
+                                <th class="p-4 font-bold uppercase tracking-wider">Şehir</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Hava Kalite İndeksi (HKİ)</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Durum</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Ana Kirletici</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparison-table-body" class="divide-y divide-gray-200">
+                            <tr><td colspan="4" class="p-8 text-center text-gray-500">Şehir verileri yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-4">Hava kalitesi verileri <a href="https://aqicn.org/" target="_blank" class="underline hover:text-[#118AB2]">World Air Quality Index Project</a> tarafından sağlanmaktadır.</p>
+            </div>
+        </section>
 
-        <section id="summary-table-section" class="py-16 md:py-24 bg-gray-100">
+        <section id="summary-table-section" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Projenin Öne Çıkan Yönleri</h2>
@@ -274,21 +230,21 @@
     <footer class="bg-[#073B4C] text-white py-8">
         <div class="container mx-auto px-6 text-center">
             <p>&copy; 2025 BIQ-Alg 0CO2 Projesi. Tüm Hakları Saklıdır.</p>
-            <p class="text-sm opacity-70 mt-2">Daha Yeşil Bir Gelecek İçin Biyoteknoloji.</p>
         </div>
     </footer>
     
     <div id="message-box" class="message-box"></div>
 
     <script type="module">
-        // Gerekli Firebase kütüphanelerini içe aktar
+        // Firebase kütüphanelerini içe aktar
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         document.addEventListener('DOMContentLoaded', function () {
             
-            // TAMAMEN DOĞRU VE ÇALIŞAN firebaseConfig
+            const AQI_API_TOKEN = "BURAYA_KENDİ_API_ANAHTARINIZI_YAPIŞTIRIN"; 
+            const CITIES = ["Hatay", "Van", "Kocaeli", "Istanbul"];
             const firebaseConfig = {
                 apiKey: "AIzaSyBvJNWLHjMqlhAdZXSBqHQuPNnnImNZd4Q",
                 authDomain: "biqalgco2-hava-istasyonu.firebaseapp.com",
@@ -300,95 +256,137 @@
             };
             
             let db;
-
             try {
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 const auth = getAuth(app);
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
-                        console.log("Oturum açıldı, dinleyiciler başlatılıyor...");
                         startRealtimeListeners();
+                        loadCityComparisons(); 
                     } else {
                         signInAnonymously(auth);
                     }
                 });
             } catch(e) { console.error("Firebase başlatma hatası:", e); }
             
+            function getAqiStatus(aqi) {
+                if (aqi <= 50) return { text: 'İyi', color: 'bg-green-500' };
+                if (aqi <= 100) return { text: 'Orta', color: 'bg-yellow-500' };
+                if (aqi <= 150) return { text: 'Hassas', color: 'bg-orange-500' };
+                if (aqi <= 200) return { text: 'Sağlıksız', color: 'bg-red-500' };
+                if (aqi <= 300) return { text: 'Çok Sağlıksız', color: 'bg-purple-700' };
+                return { text: 'Tehlikeli', color: 'bg-red-900' };
+            }
 
-            // --- GRAFİK AYARLARI ---
-            const createChart = (ctx, type, datasets) => new Chart(ctx, { type: type, data: { labels: [], datasets: datasets }, options: { animation: false, responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'second', displayFormats: { second: 'HH:mm:ss' } }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 }}, y: { beginAtZero: false } }, plugins: { legend: { display: true } } } });
-            const tempHumidityCtx = document.getElementById('tempHumidityChart')?.getContext('2d');
-            const co2Ctx = document.getElementById('co2Chart')?.getContext('2d');
-            let tempHumidityChart = tempHumidityCtx ? createChart(tempHumidityCtx, 'line', [{ label: 'Sıcaklık (°C)', data: [], borderColor: '#FF6B6B', tension: 0.2 }, { label: 'Nem (%)', data: [], borderColor: '#118AB2', tension: 0.2 }]) : null;
-            let co2Chart = co2Ctx ? createChart(co2Ctx, 'line', [{ label: 'CO₂ (ppm)', data: [], borderColor: '#06D6A0', tension: 0.2, fill: { target: 'origin', above: 'rgba(6, 214, 160, 0.1)'} }]) : null;
-            
-            function updateAllCharts(historyData) {
-                if (!historyData || historyData.length === 0) return;
-                const labels = [], tempData = [], humData = [], co2Data = [];
-
-                historyData.forEach(dataPoint => {
-                    if (dataPoint.timestamp) {
-                        labels.push(dataPoint.timestamp.toDate());
-                        tempData.push(dataPoint.temperature);
-                        humData.push(dataPoint.humidity);
-                        co2Data.push(dataPoint.co2);
-                    }
-                });
-                
-                if (tempHumidityChart) {
-                    tempHumidityChart.data.labels = labels;
-                    tempHumidityChart.data.datasets[0].data = tempData;
-                    tempHumidityChart.data.datasets[1].data = humData;
-                    tempHumidityChart.update();
-                }
-                if (co2Chart) {
-                    co2Chart.data.labels = labels;
-                    co2Chart.data.datasets[0].data = co2Data;
-                    co2Chart.update();
+            async function fetchAirQualityData(city) {
+                try {
+                    const response = await fetch(`https://api.aqicn.org/feed/${city}/?token=${AQI_API_TOKEN}`);
+                    if (!response.ok) return null;
+                    const jsonResponse = await response.json();
+                    return jsonResponse.data;
+                } catch (error) {
+                    console.error(`Hata (${city}):`, error);
+                    return null;
                 }
             }
 
+            async function loadCityComparisons() {
+                const tableBody = document.getElementById('comparison-table-body');
+                if (AQI_API_TOKEN === "BURAYA_KENDİ_API_ANAHTARINIZI_YAPIŞTIRIN") {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="p-8 text-center text-red-600 font-semibold">
+                                Lütfen Hava Kalitesi Karşılaştırmasını etkinleştirmek için kodun içine API anahtarınızı girin.
+                                <br>
+                                <a href="https://aqicn.org/data-platform/token/" target="_blank" class="text-blue-500 underline mt-2 inline-block">Buradan ücretsiz anahtar alabilirsiniz.</a>
+                            </td>
+                        </tr>`;
+                    return;
+                }
+
+                tableBody.innerHTML = ''; 
+                for (const city of CITIES) {
+                    const data = await fetchAirQualityData(city);
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50';
+                    let rowContent = `<td class="p-4 font-semibold text-[#073B4C]">${city}</td>`;
+                    if (data && data.aqi) {
+                        const status = getAqiStatus(data.aqi);
+                        rowContent += `<td class="p-4 font-bold text-lg">${data.aqi}</td>
+                                       <td class="p-4"><span class="px-3 py-1 text-sm text-white rounded-full ${status.color}">${status.text}</span></td>
+                                       <td class="p-4 text-gray-700 uppercase">${data.dominentpol || '-'}</td>`;
+                    } else {
+                        rowContent += `<td colspan="3" class="p-4 text-red-500">Veri alınamadı veya istasyon çevrimdışı.</td>`;
+                    }
+                    row.innerHTML = rowContent;
+                    tableBody.appendChild(row);
+                }
+            }
+
+            const createChart = (ctx, datasets) => new Chart(ctx, { type: 'line', data: { labels: [], datasets: datasets }, options: { animation: false, responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'second', displayFormats: { second: 'HH:mm:ss' } }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 }}, y: { beginAtZero: false } }, plugins: { legend: { display: true } } } });
+            const tempHumidityChart = createChart(document.getElementById('tempHumidityChart')?.getContext('2d'), [{ label: 'Sıcaklık (°C)', data: [], borderColor: '#FF6B6B', tension: 0.2 }, { label: 'Nem (%)', data: [], borderColor: '#118AB2', tension: 0.2 }]);
+            const co2Chart = createChart(document.getElementById('co2Chart')?.getContext('2d'), [{ label: 'CO₂ (ppm)', data: [], borderColor: '#06D6A0', tension: 0.2, fill: { target: 'origin', above: 'rgba(6, 214, 160, 0.1)'} }]);
+
+            function updateAllCharts(historyData) {
+                const labels = [], tempData = [], humData = [], co2Data = [];
+                historyData.forEach(dp => {
+                    if (dp.timestamp) {
+                        labels.push(dp.timestamp.toDate());
+                        tempData.push(dp.temperature);
+                        humData.push(dp.humidity);
+                        co2Data.push(dp.co2);
+                    }
+                });
+                tempHumidityChart.data.labels = labels; tempHumidityChart.data.datasets[0].data = tempData; tempHumidityChart.data.datasets[1].data = humData; tempHumidityChart.update();
+                co2Chart.data.labels = labels; co2Chart.data.datasets[0].data = co2Data; co2Chart.update();
+            }
+
             function startRealtimeListeners() {
-                // 1. Anlık KPI kartları için dinleyici
                 const liveDataRef = doc(db, "artifacts/default-app-id/public/data/sensors/current_data");
                 onSnapshot(liveDataRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
-                        const temp = data.temperature || '--';
-                        const hum = data.humidity || '--';
-                        const co2 = data.co2 || '---';
-                        const mq135 = data.mq135_value || '---';
-                        const light = data.light_value || '---';
-
-                        document.getElementById('kpi-co2').innerHTML = `${co2} <span class="text-lg">ppm</span>`;
-                        document.getElementById('kpi-mq135').textContent = mq135 !== '---' ? (parseInt(mq135) < 300 ? 'İyi' : 'Kontrol') : '---';
-                        document.getElementById('kpi-light').innerHTML = `${light} <span class="text-lg">lux</span>`;
-                        document.getElementById('kpi-temp').innerHTML = `${parseFloat(temp).toFixed(1)} <span class="text-lg">°C</span>`;
-                        document.getElementById('kpi-humidity').innerHTML = `${parseFloat(hum).toFixed(1)} <span class="text-lg">%</span>`;
+                        document.getElementById('kpi-co2').innerHTML = `${data.co2 || '---'} <span class="text-lg">ppm</span>`;
+                        document.getElementById('kpi-mq135').textContent = data.mq135_value ? (parseInt(data.mq135_value) < 300 ? 'İyi' : 'Kontrol') : '---';
+                        document.getElementById('kpi-light').innerHTML = `${data.light_value || '---'} <span class="text-lg">lux</span>`;
+                        document.getElementById('kpi-temp').innerHTML = `${parseFloat(data.temperature || 0).toFixed(1)} <span class="text-lg">°C</span>`;
+                        document.getElementById('kpi-humidity').innerHTML = `${parseFloat(data.humidity || 0).toFixed(1)} <span class="text-lg">%</span>`;
                     }
                 });
-
-                // 2. Grafik için geçmiş verisini dinleyen sorgu
-                const historyCollectionRef = collection(db, "artifacts/default-app-id/public/data/sensor_history");
-                const historyQuery = query(historyCollectionRef, orderBy("timestamp", "desc"), limit(10));
-                
+                const historyQuery = query(collection(db, "artifacts/default-app-id/public/data/sensor_history"), orderBy("timestamp", "desc"), limit(10));
                 onSnapshot(historyQuery, (querySnapshot) => {
-                    const historyData = [];
-                    querySnapshot.forEach((doc) => {
-                        historyData.push(doc.data());
-                    });
+                    const historyData = querySnapshot.docs.map(doc => doc.data());
                     updateAllCharts(historyData.reverse());
                 });
             }
-            
+
             // Sayfa kaydırma ile menü aktifliğini sağlayan kodlar
             const navLinks = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('main section');
-            window.addEventListener('scroll', () => { let current = "hero"; sections.forEach(section => { const sectionTop = section.offsetTop; if (window.pageYOffset >= sectionTop - 75) { current = section.getAttribute('id'); } }); navLinks.forEach(link => { link.classList.remove('active'); if (link.href.includes(current)) { link.classList.add('active'); } }); });
+            window.addEventListener('scroll', () => { 
+                let current = "hero"; 
+                sections.forEach(section => { 
+                    const sectionTop = section.offsetTop; 
+                    if (window.pageYOffset >= sectionTop - 75) { 
+                        current = section.getAttribute('id'); 
+                    } 
+                }); 
+                navLinks.forEach(link => { 
+                    link.classList.remove('active'); 
+                    if (link.href && link.href.includes(current)) { 
+                        link.classList.add('active'); 
+                    } 
+                }); 
+            });
+
+            // STATİK GRAFİK VERİLERİ (TECHNOLOGY BÖLÜMÜ İÇİN)
+            const pbrPerformanceChartCtx = document.getElementById('pbrPerformanceChart')?.getContext('2d');
+            if(pbrPerformanceChartCtx) {
+                new Chart(pbrPerformanceChartCtx, { type: 'bar', data: { labels: ['Biyokütle Verimliliği (g/L/gün)', 'Maks. Biyokütle Yoğunluğu (g/L)'], datasets: [{ label: 'Dikey Tübüler FBR', data: [1.65, 20.0], backgroundColor: '#118AB2' }, { label: 'Düz Panel FBR', data: [4.8, 26.6], backgroundColor: '#06D6A0' }, { label: 'Açık Havuz', data: [0.3, 1.5], backgroundColor: '#FFD166' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Değer' } } }, plugins: { title: { display: true, text: 'Farklı FBR Teknolojilerinin Performans Karşılaştırması' } } } });
+            }
         
         });
     </script>
 </body>
 </html>
-```
