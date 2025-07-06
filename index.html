@@ -111,27 +111,82 @@
                         BIQ-Alg 0CO2 istasyonundan gelen gerçek zamanlı sensör verilerini buradan takip edin.
                     </p>
                 </div>
-                <!-- DÜZENLEME: Izgara yapısı 6 kartı destekleyecek şekilde güncellendi -->
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 text-center">
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">CO₂ SEVİYESİ</h4><p id="kpi-co2" class="text-3xl font-black text-[#118AB2] mt-1">--- <span class="text-lg">ppm</span></p></div>
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">HAVA KALİTESİ</h4><p id="kpi-air-quality" class="text-3xl font-black text-[#06D6A0] mt-1">---</p></div>
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">IŞIK ŞİDDETİ</h4><p id="kpi-light" class="text-3xl font-black text-[#FFD166] mt-1">--- <span class="text-lg">lux</span></p></div>
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">SICAKLIK</h4><p id="kpi-temp" class="text-3xl font-black text-[#FF6B6B] mt-1">-- <span class="text-lg">°C</span></p></div>
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">NEM</h4><p id="kpi-humidity" class="text-3xl font-black text-[#118AB2] mt-1">-- <span class="text-lg">%</span></p></div>
-                    <!-- YENİ: TDS için yeni KPI kartı eklendi -->
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">SU KALİTESİ (TDS)</h4><p id="kpi-tds" class="text-3xl font-black text-[#EF476F] mt-1">--- <span class="text-lg">ppm</span></p></div>
                 </div>
-                <!-- DÜZENLEME: Grafik alanı 3 grafiği destekleyecek şekilde güncellendi -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Sıcaklık ve Nem Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="tempHumidityChart"></canvas></div></div>
+                <!-- DÜZENLEME: Grafik alanı 2x2'lik bir ızgara yapısına dönüştürüldü -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="co2Chart"></canvas></div></div>
-                    <!-- YENİ: TDS için yeni grafik alanı eklendi -->
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Su Kalitesi Trendi (TDS)</h3><div class="chart-container" style="height: 300px;"><canvas id="tdsChart"></canvas></div></div>
+                    <!-- YENİ: Işık Şiddeti grafiği eklendi -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Işık Şiddeti Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="lightChart"></canvas></div></div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Sıcaklık ve Nem Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="tempHumidityChart"></canvas></div></div>
                 </div>
                 <div class="text-center mt-12">
                     <button id="download-csv-button" class="bg-[#073B4C] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#118AB2] transition-colors shadow-md">
                         Grafik Verilerini Kaydet (CSV)
                     </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="tds-info" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">TDS Değeri ve Oksijen Üretimi</h2>
+                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
+                        TDS (Toplam Çözünmüş Katı Madde), suyun içindeki mineral ve tuz miktarını belirtir. Bu değer, mikroalglerin fotosentez yaparak oksijen üretme kapasitesini doğrudan etkiler.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="font-heading text-2xl font-bold text-blue-500 mb-3">1. Düşük TDS</h3>
+                        <p class="text-gray-600">Saf suya yakın, çok düşük TDS değerleri, alglerin büyümesi için gerekli besinlerin eksik olduğu anlamına gelir. Bu durumda fotosentez yavaşlar.</p>
+                        <p class="mt-4 font-bold text-lg">Sonuç: <span class="text-red-600">Çok Düşük / Yok</span></p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-4 border-[#06D6A0]">
+                        <h3 class="font-heading text-2xl font-bold text-[#06D6A0] mb-3">2. Optimum TDS</h3>
+                        <p class="text-gray-600">Her mikroalg türünün ideal bir TDS aralığı vardır. Bu aralıkta, algler tüm besinleri alarak maksimum verimlilikle fotosentez yapar.</p>
+                        <p class="mt-4 font-bold text-lg">Sonuç: <span class="text-green-600">Maksimum Oksijen Üretimi</span></p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="font-heading text-2xl font-bold text-red-500 mb-3">3. Yüksek TDS</h3>
+                        <p class="text-gray-600">Aşırı yüksek TDS, alg hücrelerinde "ozmotik stres" yaratarak su kaybetmelerine ve metabolizmalarının bozulmasına neden olur.</p>
+                        <p class="mt-4 font-bold text-lg">Sonuç: <span class="text-red-600">Çok Düşük / Yok</span></p>
+                    </div>
+                </div>
+                 <div class="mt-12 overflow-x-auto">
+                    <table class="w-full max-w-4xl mx-auto text-left rounded-lg shadow-lg overflow-hidden">
+                        <thead class="bg-[#118AB2] text-white">
+                            <tr>
+                                <th class="p-4 font-bold uppercase tracking-wider">TDS Seviyesi</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Etkisi</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Oksijen Üretimi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Çok Düşük</td>
+                                <td class="p-4 text-gray-700">Besin eksikliği, yetersiz büyüme.</td>
+                                <td class="p-4 font-bold text-red-600">Çok Düşük / Yok</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Optimum</td>
+                                <td class="p-4 text-gray-700">Sağlıklı büyüme, verimli fotosentez.</td>
+                                <td class="p-4 font-bold text-green-600">Maksimum</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-4 font-semibold text-[#073B4C]">Çok Yüksek</td>
+                                <td class="p-4 text-gray-700">Ozmotik stres, hücre hasarı, zehirlenme.</td>
+                                <td class="p-4 font-bold text-red-600">Çok Düşük / Yok</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
@@ -311,23 +366,44 @@
                 }
             }
             
-            const createChart = (ctx, datasets) => new Chart(ctx, { type: 'line', data: { labels: [], datasets: datasets }, options: { animation: false, responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'second', displayFormats: { second: 'HH:mm:ss' } }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 }}, y: { beginAtZero: false } }, plugins: { legend: { display: true } } } });
-            const tempHumidityChart = createChart(document.getElementById('tempHumidityChart')?.getContext('2d'), [{ label: 'Sıcaklık (°C)', data: [], borderColor: '#FF6B6B', tension: 0.2 }, { label: 'Nem (%)', data: [], borderColor: '#118AB2', tension: 0.2 }]);
-            const co2Chart = createChart(document.getElementById('co2Chart')?.getContext('2d'), [{ label: 'CO₂ (ppm)', data: [], borderColor: '#06D6A0', tension: 0.2, fill: { target: 'origin', above: 'rgba(6, 214, 160, 0.1)'} }]);
-            // YENİ: TDS için yeni grafik oluşturuldu
-            const tdsChart = createChart(document.getElementById('tdsChart')?.getContext('2d'), [{ label: 'TDS (ppm)', data: [], borderColor: '#EF476F', tension: 0.2, fill: { target: 'origin', above: 'rgba(239, 71, 111, 0.1)'} }]);
+            const createChart = (ctx, datasets, suggestedMin, suggestedMax) => {
+                if (!ctx) return null;
+                return new Chart(ctx, { 
+                    type: 'line', 
+                    data: { labels: [], datasets: datasets }, 
+                    options: { 
+                        animation: false, 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        scales: { 
+                            x: { type: 'time', time: { unit: 'second', displayFormats: { second: 'HH:mm:ss' } }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 }}, 
+                            y: { beginAtZero: false, suggestedMin: suggestedMin, suggestedMax: suggestedMax }
+                        }, 
+                        plugins: { legend: { display: true } } 
+                    } 
+                });
+            };
+
+            const tempHumidityChart = createChart(document.getElementById('tempHumidityChart')?.getContext('2d'), [{ label: 'Sıcaklık (°C)', data: [], borderColor: '#FF6B6B', tension: 0.2 }, { label: 'Nem (%)', data: [], borderColor: '#118AB2', tension: 0.2 }], 10, 40);
+            const co2Chart = createChart(document.getElementById('co2Chart')?.getContext('2d'), [{ label: 'CO₂ (ppm)', data: [], borderColor: '#06D6A0', tension: 0.2, fill: { target: 'origin', above: 'rgba(6, 214, 160, 0.1)'} }], 300, 2000);
+            const tdsChart = createChart(document.getElementById('tdsChart')?.getContext('2d'), [{ label: 'TDS (ppm)', data: [], borderColor: '#EF476F', tension: 0.2, fill: { target: 'origin', above: 'rgba(239, 71, 111, 0.1)'} }], 50, 600);
+            // YENİ: Işık şiddeti için grafik oluşturuldu
+            const lightChart = createChart(document.getElementById('lightChart')?.getContext('2d'), [{ label: 'Işık (lux)', data: [], borderColor: '#FFD166', tension: 0.2, fill: { target: 'origin', above: 'rgba(255, 209, 102, 0.1)'} }], 200, 900);
 
             function updateAllCharts(history) {
                 lastHistoryData = history;
-                const labels = [], tempData = [], humData = [], co2Data = [], tdsData = []; // YENİ: tdsData eklendi
+                // YENİ: lightData eklendi
+                const labels = [], tempData = [], humData = [], co2Data = [], tdsData = [], lightData = []; 
                 history.forEach(dp => {
-                    if (dp.timestamp) {
+                    if (dp.timestamp && dp.timestamp.toDate) {
                         const timestamp = dp.timestamp.toDate();
                         labels.push(timestamp);
                         tempData.push(isNaN(dp.temperature) ? null : parseFloat(dp.temperature));
                         humData.push(isNaN(dp.humidity) ? null : parseFloat(dp.humidity));
                         co2Data.push(isNaN(dp.co2) ? null : parseFloat(dp.co2));
-                        tdsData.push(isNaN(dp.tds_value) ? null : parseFloat(dp.tds_value)); // YENİ: tdsData dolduruldu
+                        tdsData.push(isNaN(dp.tds_value) ? null : parseFloat(dp.tds_value));
+                        // YENİ: lightData dolduruldu
+                        lightData.push(isNaN(dp.light_value) ? null : parseFloat(dp.light_value));
                     }
                 });
                 if(tempHumidityChart) {
@@ -341,11 +417,16 @@
                     co2Chart.data.datasets[0].data = co2Data;
                     co2Chart.update();
                 }
-                // YENİ: TDS grafiği güncellendi
                 if(tdsChart){
                     tdsChart.data.labels = labels;
                     tdsChart.data.datasets[0].data = tdsData;
                     tdsChart.update();
+                }
+                // YENİ: Işık grafiği güncellendi
+                if(lightChart){
+                    lightChart.data.labels = labels;
+                    lightChart.data.datasets[0].data = lightData;
+                    lightChart.update();
                 }
             }
 
@@ -366,7 +447,6 @@
                         document.getElementById('kpi-light').innerHTML = `${data.light_value || '---'} <span class="text-lg">lux</span>`;
                         document.getElementById('kpi-temp').innerHTML = `${parseFloat(data.temperature || 0).toFixed(1)} <span class="text-lg">°C</span>`;
                         document.getElementById('kpi-humidity').innerHTML = `${parseFloat(data.humidity || 0).toFixed(1)} <span class="text-lg">%</span>`;
-                        // YENİ: TDS KPI kartı güncellendi
                         document.getElementById('kpi-tds').innerHTML = `${parseFloat(data.tds_value || 0).toFixed(1)} <span class="text-lg">ppm</span>`;
                     }
                 });
@@ -383,12 +463,12 @@
                     return;
                 }
                 let csvContent = "data:text/csv;charset=utf-8,";
-                // DÜZENLEME: CSV başlığına TDS eklendi
-                csvContent += "Tarih,Sıcaklık (°C),Nem (%),CO2 (ppm),TDS (ppm)\r\n";
+                // DÜZENLEME: CSV başlığına Işık Şiddeti eklendi
+                csvContent += "Tarih,Sıcaklık (°C),Nem (%),CO2 (ppm),TDS (ppm),Işık (lux)\r\n";
                 lastHistoryData.forEach(row => {
                     const date = row.timestamp.toDate().toLocaleString('tr-TR');
-                    // DÜZENLEME: CSV satırına TDS eklendi
-                    csvContent += `${date},${row.temperature},${row.humidity},${row.co2},${row.tds_value || ''}\r\n`;
+                    // DÜZENLEME: CSV satırına Işık Şiddeti eklendi
+                    csvContent += `${date},${row.temperature},${row.humidity},${row.co2},${row.tds_value || ''},${row.light_value || ''}\r\n`;
                 });
                 const encodedUri = encodeURI(csvContent);
                 const link = document.createElement("a");
