@@ -24,11 +24,18 @@
             background: linear-gradient(135deg, #073B4C 0%, #118AB2 100%);
             color: white;
         }
-        #efficiency-analysis {
+        #comparative-analysis {
             text-align: left;
             padding-left: 1rem;
             padding-right: 1rem;
         }
+        .chat-message { margin-bottom: 1rem; display: flex; }
+        .chat-message.user { justify-content: flex-end; }
+        .chat-message.ai { justify-content: flex-start; }
+        .chat-message p { padding: 0.75rem 1.25rem; border-radius: 1.25rem; max-width: 85%; text-align: left; line-height: 1.5; }
+        .chat-message.user p { background-color: #118AB2; color: white; border-bottom-right-radius: 0.25rem; }
+        .chat-message.ai p { background-color: #E9ECEF; color: #073B4C; border-bottom-left-radius: 0.25rem; }
+        #chat-submit:disabled { background-color: #9ca3af; cursor: not-allowed; }
     </style>
 </head>
 
@@ -44,7 +51,7 @@
                 <a href="#technology" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Teknoloji</a>
                 <a href="#live-data" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Canlı Veri</a>
                 <a href="#city-comparison" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Karşılaştırma</a>
-                <a href="#summary-table-section" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Özet</a>
+                <a href="#ai-chat-section" class="nav-link text-gray-600 hover:text-[#118AB2] font-semibold transition-colors">Yapay Zeka</a>
             </div>
         </nav>
     </header>
@@ -129,24 +136,12 @@
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">SU KALİTESİ (TDS)</h4><p id="kpi-tds" class="text-3xl font-black text-[#EF476F] mt-1">--- <span class="text-lg">ppm</span></p></div>
                 </div>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="co2Chart"></canvas></div></div>
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Su Kalitesi Trendi (TDS)</h3><div class="chart-container" style="height: 300px;"><canvas id="tdsChart"></canvas></div></div>
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Işık Şiddeti Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="lightChart"></canvas></div></div>
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Sıcaklık ve Nem Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="tempHumidityChart"></canvas></div></div>
                 </div>
-                
-                <!-- DÜZENLEME: Yapay Zeka Sohbeti, Durum Değerlendirmesi ile değiştirildi -->
-                <div id="analysis-container" class="p-6 rounded-xl shadow-lg analysis-card">
-                    <h3 class="text-2xl font-bold font-heading text-center mb-4 text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 12.94 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path><path d="M12 2v7.53"></path></svg>
-                        Verimlilik Analizi (Son 10 Veri)
-                    </h3>
-                    <div id="efficiency-analysis" class="text-lg text-gray-200">
-                        <p class="text-center">Yeterli veri toplanıyor...</p>
-                    </div>
-                </div>
-
                 <div class="text-center mt-12">
                     <button id="download-csv-button" class="bg-[#073B4C] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#118AB2] transition-colors shadow-md">
                         Grafik Verilerini Kaydet (CSV)
@@ -154,30 +149,63 @@
                 </div>
             </div>
         </section>
-        
+
+        <!-- DÜZENLEME: Bölüm tamamen yeniden tasarlandı -->
         <section id="city-comparison" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Deprem Bölgeleri Hava Kalitesi Karşılaştırması</h2>
                     <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
-                        BIQ-Alg istasyonunun (İstanbul) anlık hava temizleme performansını, aşağıdaki listeden seçeceğiniz şehrin genel durumuyla karşılaştırın.
+                        BIQ-Alg istasyonunun (İstanbul) anlık hava temizleme performansını, diğer deprem bölgesi şehirlerinin genel durumuyla karşılaştırın.
                     </p>
                 </div>
-                <div class="overflow-x-auto bg-white rounded-xl shadow-lg">
+
+                <div class="overflow-x-auto bg-white rounded-xl shadow-lg mb-8">
                     <table class="w-full text-left">
                         <thead class="bg-[#073B4C] text-white">
                             <tr>
-                                <th class="p-4 font-bold uppercase tracking-wider">Şehir</th>
-                                <th class="p-4 font-bold uppercase tracking-wider">Hava Kalite İndeksi (HKİ)</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Konum</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Parametre</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Değer</th>
                                 <th class="p-4 font-bold uppercase tracking-wider">Durum</th>
-                                <th class="p-4 font-bold uppercase tracking-wider">Ana Kirletici</th>
-                                <th class="p-4 font-bold uppercase tracking-wider">Ölçüm Tarihi</th>
                             </tr>
                         </thead>
-                        <tbody id="comparison-table-body-external" class="divide-y divide-gray-200">
-                            <tr><td colspan="5" class="p-8 text-center text-gray-500">Şehir verileri yükleniyor...</td></tr>
+                        <tbody id="comparison-table-body" class="divide-y divide-gray-200">
+                             <tr><td colspan="4" class="p-8 text-center text-gray-500">Veriler yükleniyor...</td></tr>
                         </tbody>
                     </table>
+                </div>
+                
+                <div id="analysis-container" class="p-6 rounded-xl shadow-lg analysis-card">
+                    <h3 class="text-2xl font-bold font-heading text-center mb-4 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 12.94 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path><path d="M12 2v7.53"></path></svg>
+                        Karşılaştırmalı Analiz
+                    </h3>
+                    <div id="comparative-analysis" class="text-lg text-gray-200">
+                        <p class="text-center">Analiz için veriler bekleniyor...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ai-chat-section" class="py-16 md:py-24 bg-gray-100">
+             <div class="container mx-auto px-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold font-heading text-center mb-4 text-[#073B4C]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path><path d="m15 5 4 4"></path></svg>
+                        Yapay Zeka Asistanı ile Sohbet Edin
+                    </h3>
+                    <div id="chat-container" class="h-80 overflow-y-auto p-4 border rounded-lg mb-4 bg-gray-50">
+                        <div class="chat-message ai">
+                            <p>Merhaba! Ben BIQ-Alg asistanıyım. Projemiz veya anlık sensör verileri hakkında merak ettiklerinizi sorabilirsiniz.</p>
+                        </div>
+                    </div>
+                    <form id="chat-form" class="flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Sorunuzu buraya yazın..." class="flex-grow p-3 border rounded-lg focus:ring-2 focus:ring-[#118AB2] focus:outline-none">
+                        <button type="submit" id="chat-submit" class="bg-[#073B4C] text-white font-bold py-2 px-5 rounded-lg hover:bg-[#118AB2] transition-colors flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                        </button>
+                    </form>
                 </div>
             </div>
         </section>
@@ -186,9 +214,6 @@
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Projenin Öne Çıkan Yönleri</h2>
-                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
-                        Aşağıdaki tablo, projemizin temel yeteneklerini ve topluma sağladığı çok yönlü faydaları özetlemektedir.
-                    </p>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left rounded-lg shadow-lg overflow-hidden">
@@ -236,6 +261,7 @@
             
             const AQI_API_TOKEN = "08039ad9c3603305b99fc2bcaf155da6e0bfdc31"; 
             const CITIES = ["Hatay", "Van", "Kahramanmaraş", "Gaziantep", "Eskişehir", "Mersin", "Ankara", "Izmir", "Bursa", "Zonguldak"];
+            const GEMINI_API_KEY = "AIzaSyBeXmWsCfg_ruCHn9fCB9-CaUfe-T_UeFg";
             
             const firebaseConfig = {
                 apiKey: "AIzaSyBvJNWLHjMqlhAdZXSBqHQuPNnnImNZd4Q",
@@ -249,6 +275,9 @@
             
             let db;
             let lastHistoryData = [];
+            let latestSensorData = null;
+            let allCityData = [];
+            let chatHistory = []; 
 
             try {
                 const app = initializeApp(firebaseConfig);
@@ -258,6 +287,7 @@
                     if (user) {
                         startRealtimeListeners();
                         loadExternalCityData();
+                        setupAiChat();
                     } else {
                         signInAnonymously(auth);
                     }
@@ -274,12 +304,12 @@
             };
 
             function getAqiStatus(aqi) {
-                if (aqi <= 50) return { text: 'İyi', color: 'bg-green-500' };
-                if (aqi <= 100) return { text: 'Orta', color: 'bg-yellow-500' };
-                if (aqi <= 150) return { text: 'Hassas', color: 'bg-orange-500' };
-                if (aqi <= 200) return { text: 'Sağlıksız', color: 'bg-red-500' };
-                if (aqi <= 300) return { text: 'Çok Sağlıksız', color: 'bg-purple-700' };
-                return { text: 'Tehlikeli', color: 'bg-red-900' };
+                if (aqi <= 50) return { text: 'İyi', color: 'bg-green-500', textColor: 'text-green-700' };
+                if (aqi <= 100) return { text: 'Orta', color: 'bg-yellow-500', textColor: 'text-yellow-700' };
+                if (aqi <= 150) return { text: 'Hassas', color: 'bg-orange-500', textColor: 'text-orange-700' };
+                if (aqi <= 200) return { text: 'Sağlıksız', color: 'bg-red-500', textColor: 'text-red-700' };
+                if (aqi <= 300) return { text: 'Çok Sağlıksız', color: 'bg-purple-700', textColor: 'text-purple-700' };
+                return { text: 'Tehlikeli', color: 'bg-red-900', textColor: 'text-red-900' };
             }
             
             function getAirQualityStatus(co2) {
@@ -293,7 +323,8 @@
                 try {
                     const response = await fetch(`https://api.waqi.info/feed/${city}/?token=${AQI_API_TOKEN}`);
                     if (!response.ok) return null;
-                    return await response.json();
+                    const jsonResponse = await response.json();
+                    return jsonResponse.data;
                 } catch (error) {
                     console.error(`Hata (${city}):`, error);
                     return null;
@@ -301,30 +332,94 @@
             }
 
             async function loadExternalCityData() {
-                const tableBody = document.getElementById('comparison-table-body-external');
+                const tableBody = document.getElementById('comparison-table-body');
+                if (!tableBody) return;
+                
+                const istanbulPromise = fetchAirQualityData('Istanbul');
+                const otherCitiesPromises = CITIES.map(city => fetchAirQualityData(city));
+                
+                const [istanbulData, ...otherCitiesData] = await Promise.all([istanbulPromise, ...otherCitiesPromises]);
+                
+                allCityData = [{city: 'Istanbul', data: istanbulData}, ...CITIES.map((city, i) => ({city, data: otherCitiesData[i]}))];
+                
+                updateComparisonTable();
+            }
+
+            function updateComparisonTable() {
+                const tableBody = document.getElementById('comparison-table-body');
                 if (!tableBody) return;
                 tableBody.innerHTML = '';
-                for (const city of CITIES) {
-                    const jsonResponse = await fetchAirQualityData(city);
-                    const data = jsonResponse?.data;
+
+                // Önce BIQ-Alg istasyonunu ekle
+                if (latestSensorData) {
+                    const localStatus = getAirQualityStatus(latestSensorData.co2);
+                    tableBody.innerHTML += `
+                        <tr class="bg-blue-50">
+                            <td class="p-4 font-semibold text-[#073B4C]">BIQ-Alg İstasyonu (İstanbul)</td>
+                            <td class="p-4 text-gray-700">CO₂ Seviyesi</td>
+                            <td class="p-4 font-bold text-lg">${parseFloat(latestSensorData.co2).toFixed(2)} ppm</td>
+                            <td class="p-4"><span class="px-3 py-1 text-sm font-bold rounded-full ${localStatus.color.replace('text', 'bg').replace('-500', '-200')} ${localStatus.color}">${localStatus.text}</span></td>
+                        </tr>
+                    `;
+                }
+
+                // Sonra diğer şehirleri ekle
+                allCityData.forEach(cityData => {
+                    const { city, data } = cityData;
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-gray-50';
                     let rowContent = `<td class="p-4 font-semibold text-[#073B4C]">${city}</td>`;
                     if (data && data.aqi) {
                         const status = getAqiStatus(data.aqi);
-                        const measurementTime = data.time?.s ? new Date(data.time.s).toLocaleString('tr-TR') : '-';
-                        const pollutantCode = (data.dominentpol || '-').toLowerCase();
-                        const pollutantDescription = POLLUTANT_INFO[pollutantCode] || 'Baskın kirletici';
-                        rowContent += `<td class="p-4 font-bold text-lg">${data.aqi}</td>
-                                       <td class="p-4"><span class="px-3 py-1 text-sm text-white rounded-full ${status.color}">${status.text}</span></td>
-                                       <td class="p-4 text-gray-700"><span title="${pollutantDescription}">${pollutantCode.toUpperCase()}</span></td>
-                                       <td class="p-4 text-gray-700">${measurementTime}</td>`;
+                        rowContent += `
+                            <td class="p-4 text-gray-700">Hava Kalite İndeksi (HKİ)</td>
+                            <td class="p-4 font-bold text-lg">${data.aqi}</td>
+                            <td class="p-4"><span class="px-3 py-1 text-sm text-white rounded-full ${status.color}">${status.text}</span></td>
+                        `;
                     } else {
-                        rowContent += `<td colspan="4" class="p-4 text-red-500">Veri alınamadı.</td>`;
+                        rowContent += `<td colspan="3" class="p-4 text-red-500">Veri alınamadı.</td>`;
                     }
                     row.innerHTML = rowContent;
                     tableBody.appendChild(row);
-                }
+                });
+
+                updateComparativeAnalysis();
+            }
+
+            function updateComparativeAnalysis() {
+                 const analysisElement = document.getElementById('comparative-analysis');
+                 if (!latestSensorData || allCityData.length === 0) {
+                     analysisElement.innerHTML = `<p class="text-center">Analiz için veriler bekleniyor...</p>`;
+                     return;
+                 }
+
+                 const istanbulData = allCityData.find(c => c.city === 'Istanbul')?.data;
+                 if (!istanbulData) {
+                     analysisElement.innerHTML = `<p class="text-center">İstanbul için karşılaştırma verisi alınamadı.</p>`;
+                     return;
+                 }
+
+                 let comment = "";
+                 const localQuality = getAirQualityStatus(latestSensorData.co2);
+                 const remoteQuality = getAqiStatus(istanbulData.aqi);
+
+                 comment += `• <b>Hava Kalitesi:</b> İstasyonumuzun bulunduğu ortamdaki hava kalitesi <strong>${localQuality.text}</strong> (${parseFloat(latestSensorData.co2).toFixed(0)} ppm) seviyesinde. Bu, <strong>İstanbul</strong> şehrinin genel <strong>${remoteQuality.text}</strong> (HKİ: ${istanbulData.aqi}) durumuna göre oldukça iyi bir sonuç. Sistemimiz, bulunduğu ortamın havasını etkin bir şekilde temizliyor.<br><br>`;
+                 
+                 const light = latestSensorData.light_value;
+                 if (light > 400) {
+                     comment += `• <b>Biyokütle & Oksijen Üretimi:</b> Işık seviyesi (${parseInt(light)} lux) fotosentez için <strong>yeterli</strong>. Bu, hem biyokütle oluşumunu hem de oksijen üretimini destekleyerek sistem verimliliğini artırıyor.<br><br>`;
+                 } else {
+                     comment += `• <b>Biyokütle & Oksijen Üretimi:</b> Işık seviyesi (${parseInt(light)} lux) şu an için <strong>düşük</strong>. Verimliliği artırmak için daha fazla ışık gerekiyor.<br><br>`;
+                 }
+
+                 const temp = latestSensorData.temperature;
+                 if (temp > 20 && temp < 30) {
+                     comment += "• <b>Ortam Koşulları:</b> Sıcaklık, alglerin sağlıklı gelişimi için <strong>ideal</strong> aralıkta.";
+                 } else {
+                     comment += "• <b>Ortam Koşulları:</b> Sıcaklık, alglerin gelişimi için ideal aralığın <strong>dışında</strong>. Bu durum verimliliği etkileyebilir.";
+                 }
+
+                 analysisElement.innerHTML = comment;
             }
             
             const createChart = (ctx, datasets, suggestedMin, suggestedMax) => {
@@ -385,54 +480,92 @@
                     lightChart.data.datasets[0].data = lightData;
                     lightChart.update();
                 }
-                
-                updateEfficiencyAnalysis(history);
             }
             
-            function updateEfficiencyAnalysis(history) {
-                const analysisElement = document.getElementById('efficiency-analysis');
-                if (history.length < 3) {
-                    analysisElement.innerHTML = `<p class="text-center">Yeterli veri toplanıyor...</p>`;
-                    return;
-                }
-
-                const avg = (arr) => arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-                const avg_co2 = avg(history.map(d => parseFloat(d.co2)).filter(v => !isNaN(v)));
-                const avg_light = avg(history.map(d => parseFloat(d.light_value)).filter(v => !isNaN(v)));
-                const avg_tds = avg(history.map(d => parseFloat(d.tds_value)).filter(v => !isNaN(v)));
-                const avg_temp = avg(history.map(d => parseFloat(d.temperature)).filter(v => !isNaN(v)));
-
-                let comment = "";
-
-                if (avg_co2 < 1000 && avg_light > 400) {
-                    comment += "• <b>Oksijen Üretimi:</b> Mükemmel! Düşük CO₂ ve yeterli ışık seviyesi, alglerin verimli bir şekilde oksijen ürettiğini gösteriyor.<br><br>";
-                } else if (avg_co2 < 1000) {
-                    comment += "• <b>Oksijen Üretimi:</b> İyi. CO₂ seviyesi düşük, ancak daha fazla ışık ile verimlilik artabilir.<br><br>";
+            function appendChatMessage(message, sender, isThinking = false) {
+                const chatContainer = document.getElementById('chat-container');
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chat-message', sender);
+                if (isThinking) {
+                    messageElement.innerHTML = `<p class="italic">${message}</p>`;
                 } else {
-                    comment += "• <b>Oksijen Üretimi:</b> Orta. CO₂ seviyesi biraz yüksek. Sistem havayı temizlemek için aktif olarak çalışıyor.<br><br>";
+                    messageElement.innerHTML = `<p>${message.replace(/\n/g, '<br>')}</p>`;
                 }
+                chatContainer.appendChild(messageElement);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                return messageElement;
+            }
 
-                if (avg_tds > 100 && avg_tds < 500 && avg_light > 400) {
-                    comment += "• <b>Biyokütle Verimliliği:</b> Harika! Su kalitesi (TDS) ve ışık seviyesi, biyokütle üretimi için ideal koşullarda.<br><br>";
-                } else {
-                    comment += "• <b>Biyokütle Verimliliği:</b> Geliştirilebilir. Su kalitesi veya ışık seviyesi, biyokütle üretimi için optimum aralığın dışında olabilir.<br><br>";
-                }
-
-                if (avg_temp > 20 && avg_temp < 30) {
-                    comment += "• <b>Ortam Koşulları:</b> İdeal. Sıcaklık, alglerin sağlıklı gelişimi için uygun aralıkta.";
-                } else {
-                    comment += "• <b>Ortam Koşulları:</b> Dikkat. Sıcaklık, alglerin gelişimi için ideal aralığın dışında.";
-                }
+            function setupAiChat() {
+                const chatForm = document.getElementById('chat-form');
+                const chatInput = document.getElementById('chat-input');
+                const chatSubmit = document.getElementById('chat-submit');
                 
-                analysisElement.innerHTML = comment;
+                chatHistory.push({
+                    role: "user",
+                    parts: [{ text: "Sen, BIQ-Alg 0CO2 Temiz Hava İstasyonu için bir yapay zeka asistanısın. Sorulara projenin hedefleri ve sana verilecek anlık sensör verileri bağlamında, bilgilendirici ve pozitif bir tonda cevap ver." }]
+                });
+                 chatHistory.push({
+                    role: "model",
+                    parts: [{ text: "Anlaşıldı. BIQ-Alg projesi asistanı olarak, projenin hedefleri ve bana sağlanan anlık sensör verileri hakkında bilgilendirici ve pozitif yanıtlar vereceğim." }]
+                });
+
+                chatForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const userMessage = chatInput.value.trim();
+                    if (!userMessage) return;
+
+                    chatSubmit.disabled = true;
+                    appendChatMessage(userMessage, 'user');
+                    chatInput.value = '';
+                    
+                    const sensorDataContext = latestSensorData 
+                        ? `Anlık Sensör Verileri: CO2=${latestSensorData.co2.toFixed(1)}ppm, Işık=${latestSensorData.light_value.toFixed(0)}lux, Sıcaklık=${latestSensorData.temperature.toFixed(1)}°C, Nem=${latestSensorData.humidity.toFixed(1)}%, TDS=${latestSensorData.tds_value.toFixed(1)}ppm. Bu bilgilere göre kullanıcının şu sorusunu cevapla: "${userMessage}"`
+                        : `Kullanıcının sorusu: "${userMessage}"`;
+
+                    chatHistory.push({ role: "user", parts: [{ text: sensorDataContext }] });
+
+                    const thinkingElement = appendChatMessage('Yapay zeka düşünüyor...', 'ai', true);
+
+                    try {
+                        const payload = { contents: chatHistory };
+                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                             throw new Error(`API isteği başarısız oldu. Sunucu yanıtı: ${response.status}`);
+                        }
+
+                        const result = await response.json();
+                        
+                        if (result.candidates && result.candidates.length > 0) {
+                            const aiResponse = result.candidates[0].content.parts[0].text;
+                            thinkingElement.innerHTML = `<p>${aiResponse.replace(/\n/g, '<br>')}</p>`;
+                            chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
+                        } else {
+                            thinkingElement.innerHTML = `<p>Üzgünüm, bir yanıt alamadım. Lütfen tekrar deneyin.</p>`;
+                        }
+
+                    } catch (error) {
+                        console.error("Yapay zeka sohbet hatası:", error);
+                        thinkingElement.innerHTML = `<p>Üzgünüm, bir hata oluştu. Lütfen ağ bağlantınızı kontrol edin veya daha sonra tekrar deneyin. (Hata: ${error.message})</p>`;
+                    } finally {
+                        chatSubmit.disabled = false;
+                    }
+                });
             }
 
             function startRealtimeListeners() {
                 const liveDataRef = doc(db, "artifacts/default-app-id/public/data/sensors/current_data");
                 onSnapshot(liveDataRef, (docSnap) => {
                     if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        const co2Value = parseFloat(data.co2 || 0);
+                        latestSensorData = docSnap.data();
+                        const co2Value = parseFloat(latestSensorData.co2 || 0);
 
                         document.getElementById('kpi-co2').innerHTML = `${co2Value.toFixed(2)} <span class="text-lg">ppm</span>`;
                         
@@ -441,10 +574,12 @@
                         airQualityElement.textContent = airQuality.text;
                         airQualityElement.className = `text-3xl font-black mt-1 ${airQuality.color}`; 
                         
-                        document.getElementById('kpi-light').innerHTML = `${parseFloat(data.light_value || 0).toFixed(0)} <span class="text-lg">lux</span>`;
-                        document.getElementById('kpi-temp').innerHTML = `${parseFloat(data.temperature || 0).toFixed(1)} <span class="text-lg">°C</span>`;
-                        document.getElementById('kpi-humidity').innerHTML = `${parseFloat(data.humidity || 0).toFixed(1)} <span class="text-lg">%</span>`;
-                        document.getElementById('kpi-tds').innerHTML = `${parseFloat(data.tds_value || 0).toFixed(1)} <span class="text-lg">ppm</span>`;
+                        document.getElementById('kpi-light').innerHTML = `${parseFloat(latestSensorData.light_value || 0).toFixed(0)} <span class="text-lg">lux</span>`;
+                        document.getElementById('kpi-temp').innerHTML = `${parseFloat(latestSensorData.temperature || 0).toFixed(1)} <span class="text-lg">°C</span>`;
+                        document.getElementById('kpi-humidity').innerHTML = `${parseFloat(latestSensorData.humidity || 0).toFixed(1)} <span class="text-lg">%</span>`;
+                        document.getElementById('kpi-tds').innerHTML = `${parseFloat(latestSensorData.tds_value || 0).toFixed(1)} <span class="text-lg">ppm</span>`;
+                        
+                        updateComparisonTable();
                     }
                 });
                 const historyQuery = query(collection(db, "artifacts/default-app-id/public/data/sensor_history"), orderBy("timestamp", "desc"), limit(10));
