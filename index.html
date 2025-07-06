@@ -20,6 +20,10 @@
         .kpi-card { background: #ffffff; border-radius: 0.75rem; padding: 1rem; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
         .nav-link.active { color: #118AB2; font-weight: 700; }
         [title]:hover { cursor: help; }
+        .ai-analysis-card {
+            background: linear-gradient(135deg, #073B4C 0%, #118AB2 100%);
+            color: white;
+        }
     </style>
 </head>
 
@@ -119,11 +123,21 @@
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">NEM</h4><p id="kpi-humidity" class="text-3xl font-black text-[#118AB2] mt-1">-- <span class="text-lg">%</span></p></div>
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">SU KALİTESİ (TDS)</h4><p id="kpi-tds" class="text-3xl font-black text-[#EF476F] mt-1">--- <span class="text-lg">ppm</span></p></div>
                 </div>
-                <!-- DÜZENLEME: Grafik alanı 2x2'lik bir ızgara yapısına dönüştürüldü -->
+                
+                <!-- YENİ BÖLÜM: YAPAY ZEKA ANALİZİ -->
+                <div id="ai-analysis-container" class="mt-8 mb-8 p-6 rounded-xl shadow-lg ai-analysis-card">
+                    <h3 class="text-2xl font-bold font-heading text-center mb-4 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path><path d="M2.5 10.5c0-4.34 3.5-7.79 7.85-7.79a7.93 7.93 0 0 1 7.85 7.79c0 4.86-3.33 8.64-7.85 8.64A7.93 7.93 0 0 1 2.5 10.5z"></path></svg>
+                        Yapay Zeka Analizi
+                    </h3>
+                    <p id="ai-comment" class="text-lg text-center text-gray-200">
+                        Canlı veriler bekleniyor...
+                    </p>
+                </div>
+                
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="co2Chart"></canvas></div></div>
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Su Kalitesi Trendi (TDS)</h3><div class="chart-container" style="height: 300px;"><canvas id="tdsChart"></canvas></div></div>
-                    <!-- YENİ: Işık Şiddeti grafiği eklendi -->
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Işık Şiddeti Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="lightChart"></canvas></div></div>
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Sıcaklık ve Nem Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="tempHumidityChart"></canvas></div></div>
                 </div>
@@ -387,12 +401,10 @@
             const tempHumidityChart = createChart(document.getElementById('tempHumidityChart')?.getContext('2d'), [{ label: 'Sıcaklık (°C)', data: [], borderColor: '#FF6B6B', tension: 0.2 }, { label: 'Nem (%)', data: [], borderColor: '#118AB2', tension: 0.2 }], 10, 40);
             const co2Chart = createChart(document.getElementById('co2Chart')?.getContext('2d'), [{ label: 'CO₂ (ppm)', data: [], borderColor: '#06D6A0', tension: 0.2, fill: { target: 'origin', above: 'rgba(6, 214, 160, 0.1)'} }], 300, 2000);
             const tdsChart = createChart(document.getElementById('tdsChart')?.getContext('2d'), [{ label: 'TDS (ppm)', data: [], borderColor: '#EF476F', tension: 0.2, fill: { target: 'origin', above: 'rgba(239, 71, 111, 0.1)'} }], 50, 600);
-            // YENİ: Işık şiddeti için grafik oluşturuldu
             const lightChart = createChart(document.getElementById('lightChart')?.getContext('2d'), [{ label: 'Işık (lux)', data: [], borderColor: '#FFD166', tension: 0.2, fill: { target: 'origin', above: 'rgba(255, 209, 102, 0.1)'} }], 200, 900);
 
             function updateAllCharts(history) {
                 lastHistoryData = history;
-                // YENİ: lightData eklendi
                 const labels = [], tempData = [], humData = [], co2Data = [], tdsData = [], lightData = []; 
                 history.forEach(dp => {
                     if (dp.timestamp && dp.timestamp.toDate) {
@@ -402,7 +414,6 @@
                         humData.push(isNaN(dp.humidity) ? null : parseFloat(dp.humidity));
                         co2Data.push(isNaN(dp.co2) ? null : parseFloat(dp.co2));
                         tdsData.push(isNaN(dp.tds_value) ? null : parseFloat(dp.tds_value));
-                        // YENİ: lightData dolduruldu
                         lightData.push(isNaN(dp.light_value) ? null : parseFloat(dp.light_value));
                     }
                 });
@@ -422,11 +433,64 @@
                     tdsChart.data.datasets[0].data = tdsData;
                     tdsChart.update();
                 }
-                // YENİ: Işık grafiği güncellendi
                 if(lightChart){
                     lightChart.data.labels = labels;
                     lightChart.data.datasets[0].data = lightData;
                     lightChart.update();
+                }
+            }
+            
+            // YENİ: Yapay Zeka Yorumu Oluşturma Fonksiyonu
+            async function generateAiComment(data) {
+                const aiCommentElement = document.getElementById('ai-comment');
+                aiCommentElement.textContent = "Analiz ediliyor...";
+
+                const prompt = `
+                    Sen, BIQ-Alg 0CO2 Temiz Hava İstasyonu için bir yapay zeka asistanısın. 
+                    Aşağıdaki anlık sensör verilerine dayanarak, kullanıcı için kısa ve bilgilendirici bir durum analizi yap. 
+                    Analizin şu üç konuyu kapsamalı:
+                    1.  **Oksijen ve Temiz Hava Verimliliği:** CO2 ve Işık seviyelerine göre yorum yap. CO2 düşükse ve ışık yeterliyse verimliliğin yüksek olduğunu belirt.
+                    2.  **Biyokütle Verimliliği:** TDS ve Işık seviyelerine göre yorum yap. TDS optimum aralıktaysa (100-500 ppm) ve ışık yeterliyse biyokütle üretiminin iyi olduğunu belirt.
+                    3.  **Ortam Koşulları:** Sıcaklık ve Nem değerlerinin alglerin yaşaması için uygun olup olmadığını belirt. (İdeal sıcaklık 20-30°C, ideal nem 40-60%).
+                    Yorumun cesaret verici ve pozitif bir tonda olsun.
+
+                    Anlık Veriler:
+                    - CO2 Seviyesi: ${data.co2.toFixed(2)} ppm
+                    - Işık Şiddeti: ${data.light_value.toFixed(0)} lux
+                    - Sıcaklık: ${data.temperature.toFixed(1)} °C
+                    - Nem: ${data.humidity.toFixed(1)} %
+                    - Su Kalitesi (TDS): ${data.tds_value.toFixed(1)} ppm
+                `;
+
+                try {
+                    let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; // API anahtarı gerekmez
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API isteği başarısız: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        aiCommentElement.textContent = text;
+                    } else {
+                       aiCommentElement.textContent = "Yapay zekadan geçerli bir yorum alınamadı. Lütfen daha sonra tekrar deneyin.";
+                    }
+                } catch (error) {
+                    console.error("Yapay zeka yorumu oluşturma hatası:", error);
+                    aiCommentElement.textContent = "Analiz sırasında bir hata oluştu. Lütfen internet bağlantınızı kontrol edin.";
                 }
             }
 
@@ -444,10 +508,13 @@
                         airQualityElement.textContent = airQuality.text;
                         airQualityElement.className = `text-3xl font-black mt-1 ${airQuality.color}`; 
                         
-                        document.getElementById('kpi-light').innerHTML = `${data.light_value || '---'} <span class="text-lg">lux</span>`;
+                        document.getElementById('kpi-light').innerHTML = `${parseFloat(data.light_value || 0).toFixed(0)} <span class="text-lg">lux</span>`;
                         document.getElementById('kpi-temp').innerHTML = `${parseFloat(data.temperature || 0).toFixed(1)} <span class="text-lg">°C</span>`;
                         document.getElementById('kpi-humidity').innerHTML = `${parseFloat(data.humidity || 0).toFixed(1)} <span class="text-lg">%</span>`;
                         document.getElementById('kpi-tds').innerHTML = `${parseFloat(data.tds_value || 0).toFixed(1)} <span class="text-lg">ppm</span>`;
+                        
+                        // YENİ: Her yeni veri geldiğinde AI yorumunu tetikle
+                        generateAiComment(data);
                     }
                 });
                 const historyQuery = query(collection(db, "artifacts/default-app-id/public/data/sensor_history"), orderBy("timestamp", "desc"), limit(10));
@@ -463,11 +530,9 @@
                     return;
                 }
                 let csvContent = "data:text/csv;charset=utf-8,";
-                // DÜZENLEME: CSV başlığına Işık Şiddeti eklendi
                 csvContent += "Tarih,Sıcaklık (°C),Nem (%),CO2 (ppm),TDS (ppm),Işık (lux)\r\n";
                 lastHistoryData.forEach(row => {
                     const date = row.timestamp.toDate().toLocaleString('tr-TR');
-                    // DÜZENLEME: CSV satırına Işık Şiddeti eklendi
                     csvContent += `${date},${row.temperature},${row.humidity},${row.co2},${row.tds_value || ''},${row.light_value || ''}\r\n`;
                 });
                 const encodedUri = encodeURI(csvContent);
