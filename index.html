@@ -24,6 +24,11 @@
             background: linear-gradient(135deg, #073B4C 0%, #118AB2 100%);
             color: white;
         }
+        #ai-comment {
+            text-align: left;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
     </style>
 </head>
 
@@ -124,15 +129,14 @@
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">SU KALİTESİ (TDS)</h4><p id="kpi-tds" class="text-3xl font-black text-[#EF476F] mt-1">--- <span class="text-lg">ppm</span></p></div>
                 </div>
                 
-                <!-- YENİ BÖLÜM: YAPAY ZEKA ANALİZİ -->
                 <div id="ai-analysis-container" class="mt-8 mb-8 p-6 rounded-xl shadow-lg ai-analysis-card">
                     <h3 class="text-2xl font-bold font-heading text-center mb-4 text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path><path d="M2.5 10.5c0-4.34 3.5-7.79 7.85-7.79a7.93 7.93 0 0 1 7.85 7.79c0 4.86-3.33 8.64-7.85 8.64A7.93 7.93 0 0 1 2.5 10.5z"></path></svg>
                         Yapay Zeka Analizi
                     </h3>
-                    <p id="ai-comment" class="text-lg text-center text-gray-200">
-                        Canlı veriler bekleniyor...
-                    </p>
+                    <div id="ai-comment" class="text-lg text-gray-200">
+                        <p class="text-center">Canlı veriler bekleniyor...</p>
+                    </div>
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -440,10 +444,41 @@
                 }
             }
             
-            // YENİ: Yapay Zeka Yorumu Oluşturma Fonksiyonu
+            // DÜZENLEME: API hatası durumunda standart bir yorum üreten yedek fonksiyon
+            function generateFallbackComment(data) {
+                const aiCommentElement = document.getElementById('ai-comment');
+                let comment = "<strong>Yapay Zeka Analizi (Standart Değerlendirme):</strong><br><br>";
+
+                const co2 = data.co2;
+                const light = data.light_value;
+                if (co2 < 1000 && light > 300) {
+                    comment += "• <b>Oksijen Üretimi:</b> Mükemmel! Düşük CO₂ ve yeterli ışık seviyesi, alglerin verimli bir şekilde oksijen ürettiğini gösteriyor.<br>";
+                } else if (co2 < 1000) {
+                    comment += "• <b>Oksijen Üretimi:</b> İyi. CO₂ seviyesi düşük, ancak daha fazla ışık ile verimlilik artabilir.<br>";
+                } else {
+                    comment += "• <b>Oksijen Üretimi:</b> Orta. CO₂ seviyesi biraz yüksek. Sistem havayı temizlemek için aktif olarak çalışıyor.<br>";
+                }
+
+                const tds = data.tds_value;
+                if (tds > 100 && tds < 500 && light > 300) {
+                    comment += "• <b>Biyokütle Verimliliği:</b> Harika! Su kalitesi (TDS) ve ışık seviyesi, biyokütle üretimi için ideal koşullarda.<br>";
+                } else {
+                    comment += "• <b>Biyokütle Verimliliği:</b> Geliştirilebilir. Su kalitesi veya ışık seviyesi, biyokütle üretimi için optimum aralığın dışında olabilir.<br>";
+                }
+
+                const temp = data.temperature;
+                if (temp > 20 && temp < 30) {
+                    comment += "• <b>Ortam Koşulları:</b> İdeal. Sıcaklık, alglerin sağlıklı gelişimi için uygun aralıkta.";
+                } else {
+                    comment += "• <b>Ortam Koşulları:</b> Dikkat. Sıcaklık, alglerin gelişimi için ideal aralığın dışında.";
+                }
+                
+                aiCommentElement.innerHTML = `<div class="p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded-r-lg"><p class="font-bold">API Bağlantı Hatası</p><p class="text-sm">Yapay zeka yorumu alınamadı. Aşağıda standart bir değerlendirme gösterilmektedir.</p></div><div class="mt-4">${comment}</div>`;
+            }
+
             async function generateAiComment(data) {
                 const aiCommentElement = document.getElementById('ai-comment');
-                aiCommentElement.textContent = "Analiz ediliyor...";
+                aiCommentElement.innerHTML = `<p class="text-center">Analiz ediliyor...</p>`;
 
                 const prompt = `
                     Sen, BIQ-Alg 0CO2 Temiz Hava İstasyonu için bir yapay zeka asistanısın. 
@@ -452,7 +487,7 @@
                     1.  **Oksijen ve Temiz Hava Verimliliği:** CO2 ve Işık seviyelerine göre yorum yap. CO2 düşükse ve ışık yeterliyse verimliliğin yüksek olduğunu belirt.
                     2.  **Biyokütle Verimliliği:** TDS ve Işık seviyelerine göre yorum yap. TDS optimum aralıktaysa (100-500 ppm) ve ışık yeterliyse biyokütle üretiminin iyi olduğunu belirt.
                     3.  **Ortam Koşulları:** Sıcaklık ve Nem değerlerinin alglerin yaşaması için uygun olup olmadığını belirt. (İdeal sıcaklık 20-30°C, ideal nem 40-60%).
-                    Yorumun cesaret verici ve pozitif bir tonda olsun.
+                    Yorumun cesaret verici ve pozitif bir tonda olsun. Cevabını madde işaretleri (•) kullanarak ve HTML <b> etiketleriyle başlıkları vurgulayarak formatla.
 
                     Anlık Veriler:
                     - CO2 Seviyesi: ${data.co2.toFixed(2)} ppm
@@ -465,7 +500,7 @@
                 try {
                     let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
                     const payload = { contents: chatHistory };
-                    const apiKey = ""; // API anahtarı gerekmez
+                    const apiKey = ""; 
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                     const response = await fetch(apiUrl, {
@@ -475,7 +510,8 @@
                     });
 
                     if (!response.ok) {
-                        throw new Error(`API isteği başarısız: ${response.statusText}`);
+                        const errorBody = await response.text();
+                        throw new Error(`API isteği başarısız: ${response.status} - ${errorBody}`);
                     }
 
                     const result = await response.json();
@@ -484,13 +520,13 @@
                         result.candidates[0].content && result.candidates[0].content.parts &&
                         result.candidates[0].content.parts.length > 0) {
                         const text = result.candidates[0].content.parts[0].text;
-                        aiCommentElement.textContent = text;
+                        aiCommentElement.innerHTML = text.replace(/\n/g, '<br>');
                     } else {
-                       aiCommentElement.textContent = "Yapay zekadan geçerli bir yorum alınamadı. Lütfen daha sonra tekrar deneyin.";
+                       throw new Error("Yapay zekadan geçerli bir içerik alınamadı.");
                     }
                 } catch (error) {
                     console.error("Yapay zeka yorumu oluşturma hatası:", error);
-                    aiCommentElement.textContent = "Analiz sırasında bir hata oluştu. Lütfen internet bağlantınızı kontrol edin.";
+                    generateFallbackComment(data); // DÜZENLEME: Hata durumunda yedek fonksiyonu çağır
                 }
             }
 
@@ -513,7 +549,6 @@
                         document.getElementById('kpi-humidity').innerHTML = `${parseFloat(data.humidity || 0).toFixed(1)} <span class="text-lg">%</span>`;
                         document.getElementById('kpi-tds').innerHTML = `${parseFloat(data.tds_value || 0).toFixed(1)} <span class="text-lg">ppm</span>`;
                         
-                        // YENİ: Her yeni veri geldiğinde AI yorumunu tetikle
                         generateAiComment(data);
                     }
                 });
