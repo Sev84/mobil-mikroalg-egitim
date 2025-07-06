@@ -136,20 +136,32 @@
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">SU KALİTESİ (TDS)</h4><p id="kpi-tds" class="text-3xl font-black text-[#EF476F] mt-1">--- <span class="text-lg">ppm</span></p></div>
                 </div>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="co2Chart"></canvas></div></div>
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Su Kalitesi Trendi (TDS)</h3><div class="chart-container" style="height: 300px;"><canvas id="tdsChart"></canvas></div></div>
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Işık Şiddeti Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="lightChart"></canvas></div></div>
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Sıcaklık ve Nem Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="tempHumidityChart"></canvas></div></div>
                 </div>
-                <div class="text-center mt-12">
+                
+                <div class="text-center mb-12">
                     <button id="download-csv-button" class="bg-[#073B4C] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#118AB2] transition-colors shadow-md">
                         Grafik Verilerini Kaydet (CSV)
                     </button>
                 </div>
+
+                <div id="analysis-container" class="p-6 rounded-xl shadow-lg analysis-card">
+                    <h3 class="text-2xl font-bold font-heading text-center mb-4 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.94.24q-.15-.48-.4-1.24a5.5 5.5 0 0 0-5.4-4.51H1.5A2.5 2.5 0 0 1-1 11.5v-3A2.5 2.5 0 0 1 1.5 6H2a5.5 5.5 0 0 0 4.88-3.32q.25-.76.4-1.24A2.5 2.5 0 0 1 9.5 2Z"></path><path d="M14.5 2a2.5 2.5 0 0 0-2.5 2.5v15a2.5 2.5 0 0 0 4.94.24q.15-.48.4-1.24a5.5 5.5 0 0 1 5.4-4.51H22.5A2.5 2.5 0 0 0 25 11.5v-3A2.5 2.5 0 0 0 22.5 6H22a5.5 5.5 0 0 1-4.88-3.32q-.25-.76-.4-1.24A2.5 2.5 0 0 0 14.5 2Z"></path></svg>
+                        Yapay Zeka Verimlilik Analizi
+                    </h3>
+                    <div id="efficiency-analysis" class="text-lg text-gray-200 analysis-content">
+                        <p class="text-center">Yeterli veri toplanıyor...</p>
+                    </div>
+                </div>
+
             </div>
         </section>
-
+        
         <section id="city-comparison" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
