@@ -172,18 +172,25 @@
                     <table class="w-full text-left">
                         <thead class="bg-[#073B4C] text-white">
                             <tr>
-                                <th class="p-4 font-bold uppercase tracking-wider">Konum</th>
-                                <th class="p-4 font-bold uppercase tracking-wider">Parametre</th>
-                                <th class="p-4 font-bold uppercase tracking-wider">Değer</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Şehir</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Hava Kalite İndeksi (HKİ)</th>
                                 <th class="p-4 font-bold uppercase tracking-wider">Durum</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Ana Kirletici</th>
+                                <th class="p-4 font-bold uppercase tracking-wider">Ölçüm Tarihi</th>
                             </tr>
                         </thead>
                         <tbody id="comparison-table-body" class="divide-y divide-gray-200">
-                             <tr><td colspan="4" class="p-8 text-center text-gray-500">Veriler yükleniyor...</td></tr>
+                             <tr><td colspan="5" class="p-8 text-center text-gray-500">Veriler yükleniyor...</td></tr>
                         </tbody>
                     </table>
                 </div>
                 
+                <!-- YENİ: Veri Kaynağı Bilgilendirme Kutusu -->
+                <div class="mt-6 mb-8 p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-800 rounded-r-lg">
+                    <h4 class="font-bold">Veri Kaynağı Hakkında</h4>
+                    <p class="text-sm mt-1">Karşılaştırma verileri, dünya genelinde 30,000'den fazla istasyondan veri toplayan kâr amacı gütmeyen bir kuruluş olan <strong>World Air Quality Index Project</strong> tarafından sağlanmaktadır. Bu platform, vatandaşların yaşadıkları yerdeki hava kirliliği hakkında bilinçlenmesine yardımcı olmayı hedefler.</p>
+                </div>
+
                 <div id="comparative-analysis-container" class="p-6 rounded-xl shadow-lg analysis-card">
                     <h3 class="text-2xl font-bold font-heading text-center mb-4 text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><path d="M13 6h3a2 2 0 0 1 2 2v7"></path><path d="M11 18H8a2 2 0 0 1-2-2V9"></path></svg>
@@ -379,6 +386,8 @@
                     let rowContent = `<td class="p-4 font-semibold text-[#073B4C]">${city}</td>`;
                     if (data && data.aqi) {
                         const status = getAqiStatus(data.aqi);
+                        const pollutantCode = (data.dominentpol || '-').toLowerCase();
+                        const pollutantDescription = POLLUTANT_INFO[pollutantCode] || 'Baskın kirletici';
                         rowContent += `
                             <td class="p-4 text-gray-700">Hava Kalite İndeksi (HKİ)</td>
                             <td class="p-4 font-bold text-lg">${data.aqi}</td>
@@ -670,4 +679,4 @@
         });
     </script>
 </body>
-</ht
+</html>
