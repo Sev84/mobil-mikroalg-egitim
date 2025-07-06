@@ -20,6 +20,15 @@
         .kpi-card { background: #ffffff; border-radius: 0.75rem; padding: 1rem; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
         .nav-link.active { color: #118AB2; font-weight: 700; }
         [title]:hover { cursor: help; }
+        .analysis-card {
+            background: linear-gradient(135deg, #073B4C 0%, #118AB2 100%);
+            color: white;
+        }
+        .analysis-content {
+            text-align: left;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
         .chat-message { margin-bottom: 1rem; display: flex; }
         .chat-message.user { justify-content: flex-end; }
         .chat-message.ai { justify-content: flex-start; }
@@ -127,6 +136,16 @@
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">SU KALİTESİ (TDS)</h4><p id="kpi-tds" class="text-3xl font-black text-[#EF476F] mt-1">--- <span class="text-lg">ppm</span></p></div>
                 </div>
                 
+                <div id="analysis-container" class="mb-8 p-6 rounded-xl shadow-lg analysis-card">
+                    <h3 class="text-2xl font-bold font-heading text-center mb-4 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.94.24q-.15-.48-.4-1.24a5.5 5.5 0 0 0-5.4-4.51H1.5A2.5 2.5 0 0 1-1 11.5v-3A2.5 2.5 0 0 1 1.5 6H2a5.5 5.5 0 0 0 4.88-3.32q.25-.76.4-1.24A2.5 2.5 0 0 1 9.5 2Z"></path><path d="M14.5 2a2.5 2.5 0 0 0-2.5 2.5v15a2.5 2.5 0 0 0 4.94.24q.15-.48.4-1.24a5.5 5.5 0 0 1 5.4-4.51H22.5A2.5 2.5 0 0 0 25 11.5v-3A2.5 2.5 0 0 0 22.5 6H22a5.5 5.5 0 0 1-4.88-3.32q-.25-.76-.4-1.24A2.5 2.5 0 0 0 14.5 2Z"></path></svg>
+                        Yapay Zeka Verimlilik Analizi
+                    </h3>
+                    <div id="efficiency-analysis" class="text-lg text-gray-200 analysis-content">
+                        <p class="text-center">Yeterli veri toplanıyor...</p>
+                    </div>
+                </div>
+                
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="co2Chart"></canvas></div></div>
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Su Kalitesi Trendi (TDS)</h3><div class="chart-container" style="height: 300px;"><canvas id="tdsChart"></canvas></div></div>
@@ -137,40 +156,6 @@
                     <button id="download-csv-button" class="bg-[#073B4C] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#118AB2] transition-colors shadow-md">
                         Grafik Verilerini Kaydet (CSV)
                     </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- YENİ BÖLÜM: Optimum Koşullar -->
-        <section id="optimal-conditions" class="py-16 md:py-24">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-12 md:mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-[#073B4C]">Mikroalgler için Optimum Yaşam Koşulları</h2>
-                    <p class="mt-4 text-lg text-[#073B4C] max-w-3xl mx-auto">
-                        Sistemin verimliliği, mikroalglerin fotosentez yapabilmesi için gerekli olan ortam koşullarının ideal aralıklarda tutulmasına bağlıdır.
-                    </p>
-                </div>
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-                    <div class="bg-white p-6 rounded-xl shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FFD166" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
-                        <h3 class="font-heading text-xl font-bold mb-2">Işık Şiddeti</h3>
-                        <p class="text-gray-600">Fotosentez için temel enerji kaynağıdır. İdeal aralık **400-1000 lux** arasıdır. Düşük ışık verimi azaltır, aşırı yüksek ışık ise hücrelere zarar verebilir.</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"></path></svg>
-                        <h3 class="font-heading text-xl font-bold mb-2">Sıcaklık</h3>
-                        <p class="text-gray-600">Metabolik aktiviteleri doğrudan etkiler. Çoğu mikroalg türü için en verimli aralık **20-30 °C**'dir. Bu aralığın dışı büyümeyi yavaşlatır.</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#EF476F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5-2 1.6-3 3.5-3 5.5a7 7 0 0 0 7 7z"></path></svg>
-                        <h3 class="font-heading text-xl font-bold mb-2">Su Kalitesi (TDS)</h3>
-                        <p class="text-gray-600">Alglerin besin alımı için kritiktir. İdeal aralık **100-500 ppm**'dir. Çok düşük TDS besin eksikliği, çok yüksek TDS ise zehirlenme yaratır.</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#118AB2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4"><path d="M5 17a2 2 0 0 1 2 2v2"></path><path d="M17 17a2 2 0 0 0 2 2v2"></path><path d="M17 17a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"></path><path d="M9 15v-3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3"></path><path d="M12 10V4a2 2 0 0 0-2-2H8"></path></svg>
-                        <h3 class="font-heading text-xl font-bold mb-2">Nem</h3>
-                        <p class="text-gray-600">Doğrudan algleri etkilemese de, sistemin genel buharlaşma oranını ve sıcaklık dengesini etkileyen ikincil bir faktördür. İdeal aralık **40-60%**'tır.</p>
-                    </div>
                 </div>
             </div>
         </section>
