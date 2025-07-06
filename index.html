@@ -24,7 +24,7 @@
             background: linear-gradient(135deg, #073B4C 0%, #118AB2 100%);
             color: white;
         }
-        #comparative-analysis {
+        .analysis-content {
             text-align: left;
             padding-left: 1rem;
             padding-right: 1rem;
@@ -136,6 +136,16 @@
                     <div class="kpi-card p-4"><h4 class="font-bold text-gray-500 text-sm">SU KALİTESİ (TDS)</h4><p id="kpi-tds" class="text-3xl font-black text-[#EF476F] mt-1">--- <span class="text-lg">ppm</span></p></div>
                 </div>
                 
+                <div id="analysis-container" class="mb-8 p-6 rounded-xl shadow-lg analysis-card">
+                    <h3 class="text-2xl font-bold font-heading text-center mb-4 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.94.24q-.15-.48-.4-1.24a5.5 5.5 0 0 0-5.4-4.51H1.5A2.5 2.5 0 0 1-1 11.5v-3A2.5 2.5 0 0 1 1.5 6H2a5.5 5.5 0 0 0 4.88-3.32q.25-.76.4-1.24A2.5 2.5 0 0 1 9.5 2Z"></path><path d="M14.5 2a2.5 2.5 0 0 0-2.5 2.5v15a2.5 2.5 0 0 0 4.94.24q.15-.48.4-1.24a5.5 5.5 0 0 1 5.4-4.51H22.5A2.5 2.5 0 0 0 25 11.5v-3A2.5 2.5 0 0 0 22.5 6H22a5.5 5.5 0 0 1-4.88-3.32q-.25-.76-.4-1.24A2.5 2.5 0 0 0 14.5 2Z"></path></svg>
+                        Yapay Zeka Verimlilik Analizi
+                    </h3>
+                    <div id="efficiency-analysis" class="text-lg text-gray-200 analysis-content">
+                        <p class="text-center">Yeterli veri toplanıyor...</p>
+                    </div>
+                </div>
+                
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">CO₂ Seviyesi Trendi</h3><div class="chart-container" style="height: 300px;"><canvas id="co2Chart"></canvas></div></div>
                     <div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-bold font-heading text-center mb-4 text-[#073B4C]">Su Kalitesi Trendi (TDS)</h3><div class="chart-container" style="height: 300px;"><canvas id="tdsChart"></canvas></div></div>
@@ -149,8 +159,7 @@
                 </div>
             </div>
         </section>
-
-        <!-- DÜZENLEME: Bölüm tamamen yeniden tasarlandı -->
+        
         <section id="city-comparison" class="py-16 md:py-24">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 md:mb-16">
@@ -159,7 +168,6 @@
                         BIQ-Alg istasyonunun (İstanbul) anlık hava temizleme performansını, diğer deprem bölgesi şehirlerinin genel durumuyla karşılaştırın.
                     </p>
                 </div>
-
                 <div class="overflow-x-auto bg-white rounded-xl shadow-lg mb-8">
                     <table class="w-full text-left">
                         <thead class="bg-[#073B4C] text-white">
@@ -176,12 +184,12 @@
                     </table>
                 </div>
                 
-                <div id="analysis-container" class="p-6 rounded-xl shadow-lg analysis-card">
+                <div id="comparative-analysis-container" class="p-6 rounded-xl shadow-lg analysis-card">
                     <h3 class="text-2xl font-bold font-heading text-center mb-4 text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 12.94 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path><path d="M12 2v7.53"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-2 -mt-1"><circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><path d="M13 6h3a2 2 0 0 1 2 2v7"></path><path d="M11 18H8a2 2 0 0 1-2-2V9"></path></svg>
                         Karşılaştırmalı Analiz
                     </h3>
-                    <div id="comparative-analysis" class="text-lg text-gray-200">
+                    <div id="comparative-analysis" class="text-lg text-gray-200 analysis-content">
                         <p class="text-center">Analiz için veriler bekleniyor...</p>
                     </div>
                 </div>
@@ -480,21 +488,97 @@
                     lightChart.data.datasets[0].data = lightData;
                     lightChart.update();
                 }
+                
+                updateEfficiencyAnalysis(history);
             }
             
-            function appendChatMessage(message, sender, isThinking = false) {
-                const chatContainer = document.getElementById('chat-container');
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('chat-message', sender);
-                if (isThinking) {
-                    messageElement.innerHTML = `<p class="italic">${message}</p>`;
-                } else {
-                    messageElement.innerHTML = `<p>${message.replace(/\n/g, '<br>')}</p>`;
+            function updateEfficiencyAnalysis(history) {
+                const analysisElement = document.getElementById('efficiency-analysis');
+                if (history.length < 3) {
+                    analysisElement.innerHTML = `<p class="text-center">Yeterli veri toplanıyor...</p>`;
+                    return;
                 }
-                chatContainer.appendChild(messageElement);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-                return messageElement;
+
+                const avg = (arr) => arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+                const avg_co2 = avg(history.map(d => parseFloat(d.co2)).filter(v => !isNaN(v)));
+                const avg_light = avg(history.map(d => parseFloat(d.light_value)).filter(v => !isNaN(v)));
+                const avg_tds = avg(history.map(d => parseFloat(d.tds_value)).filter(v => !isNaN(v)));
+                const avg_temp = avg(history.map(d => parseFloat(d.temperature)).filter(v => !isNaN(v)));
+
+                let comment = "";
+
+                if (avg_co2 < 1000 && avg_light > 400) {
+                    comment += "• <b>Oksijen Üretimi:</b> Mükemmel! Düşük CO₂ ve yeterli ışık seviyesi, alglerin verimli bir şekilde oksijen ürettiğini gösteriyor.<br><br>";
+                } else if (avg_co2 < 1000) {
+                    comment += "• <b>Oksijen Üretimi:</b> İyi. CO₂ seviyesi düşük, ancak daha fazla ışık ile verimlilik artabilir.<br><br>";
+                } else {
+                    comment += "• <b>Oksijen Üretimi:</b> Orta. CO₂ seviyesi biraz yüksek. Sistem havayı temizlemek için aktif olarak çalışıyor.<br><br>";
+                }
+
+                if (avg_tds > 100 && avg_tds < 500 && avg_light > 400) {
+                    comment += "• <b>Biyokütle Verimliliği:</b> Harika! Su kalitesi (TDS) ve ışık seviyesi, biyokütle üretimi için ideal koşullarda.<br><br>";
+                } else {
+                    comment += "• <b>Biyokütle Verimliliği:</b> Geliştirilebilir. Su kalitesi veya ışık seviyesi, biyokütle üretimi için optimum aralığın dışında olabilir.<br><br>";
+                }
+
+                if (avg_temp > 20 && avg_temp < 30) {
+                    comment += "• <b>Ortam Koşulları:</b> İdeal. Sıcaklık, alglerin sağlıklı gelişimi için uygun aralıkta.";
+                } else {
+                    comment += "• <b>Ortam Koşulları:</b> Dikkat. Sıcaklık, alglerin gelişimi için ideal aralığın dışında.";
+                }
+                
+                analysisElement.innerHTML = comment;
             }
+
+            function startRealtimeListeners() {
+                const liveDataRef = doc(db, "artifacts/default-app-id/public/data/sensors/current_data");
+                onSnapshot(liveDataRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        latestSensorData = docSnap.data();
+                        const co2Value = parseFloat(latestSensorData.co2 || 0);
+
+                        document.getElementById('kpi-co2').innerHTML = `${co2Value.toFixed(2)} <span class="text-lg">ppm</span>`;
+                        
+                        const airQuality = getAirQualityStatus(co2Value);
+                        const airQualityElement = document.getElementById('kpi-air-quality');
+                        airQualityElement.textContent = airQuality.text;
+                        airQualityElement.className = `text-3xl font-black mt-1 ${airQuality.color}`; 
+                        
+                        document.getElementById('kpi-light').innerHTML = `${parseFloat(latestSensorData.light_value || 0).toFixed(0)} <span class="text-lg">lux</span>`;
+                        document.getElementById('kpi-temp').innerHTML = `${parseFloat(latestSensorData.temperature || 0).toFixed(1)} <span class="text-lg">°C</span>`;
+                        document.getElementById('kpi-humidity').innerHTML = `${parseFloat(latestSensorData.humidity || 0).toFixed(1)} <span class="text-lg">%</span>`;
+                        document.getElementById('kpi-tds').innerHTML = `${parseFloat(latestSensorData.tds_value || 0).toFixed(1)} <span class="text-lg">ppm</span>`;
+                        
+                        updateComparisonTable();
+                    }
+                });
+                const historyQuery = query(collection(db, "artifacts/default-app-id/public/data/sensor_history"), orderBy("timestamp", "desc"), limit(10));
+                onSnapshot(historyQuery, (querySnapshot) => {
+                    const historyData = querySnapshot.docs.map(doc => doc.data());
+                    updateAllCharts(historyData.reverse());
+                });
+            }
+            
+            function downloadDataAsCSV() {
+                if (lastHistoryData.length === 0) {
+                    alert("İndirilecek veri bulunmuyor.");
+                    return;
+                }
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Tarih,Sıcaklık (°C),Nem (%),CO2 (ppm),TDS (ppm),Işık (lux)\r\n";
+                lastHistoryData.forEach(row => {
+                    const date = row.timestamp.toDate().toLocaleString('tr-TR');
+                    csvContent += `${date},${row.temperature},${row.humidity},${row.co2},${row.tds_value || ''},${row.light_value || ''}\r\n`;
+                });
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "sensor_verileri.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            document.getElementById('download-csv-button').addEventListener('click', downloadDataAsCSV);
 
             function setupAiChat() {
                 const chatForm = document.getElementById('chat-form');
@@ -560,56 +644,6 @@
                 });
             }
 
-            function startRealtimeListeners() {
-                const liveDataRef = doc(db, "artifacts/default-app-id/public/data/sensors/current_data");
-                onSnapshot(liveDataRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        latestSensorData = docSnap.data();
-                        const co2Value = parseFloat(latestSensorData.co2 || 0);
-
-                        document.getElementById('kpi-co2').innerHTML = `${co2Value.toFixed(2)} <span class="text-lg">ppm</span>`;
-                        
-                        const airQuality = getAirQualityStatus(co2Value);
-                        const airQualityElement = document.getElementById('kpi-air-quality');
-                        airQualityElement.textContent = airQuality.text;
-                        airQualityElement.className = `text-3xl font-black mt-1 ${airQuality.color}`; 
-                        
-                        document.getElementById('kpi-light').innerHTML = `${parseFloat(latestSensorData.light_value || 0).toFixed(0)} <span class="text-lg">lux</span>`;
-                        document.getElementById('kpi-temp').innerHTML = `${parseFloat(latestSensorData.temperature || 0).toFixed(1)} <span class="text-lg">°C</span>`;
-                        document.getElementById('kpi-humidity').innerHTML = `${parseFloat(latestSensorData.humidity || 0).toFixed(1)} <span class="text-lg">%</span>`;
-                        document.getElementById('kpi-tds').innerHTML = `${parseFloat(latestSensorData.tds_value || 0).toFixed(1)} <span class="text-lg">ppm</span>`;
-                        
-                        updateComparisonTable();
-                    }
-                });
-                const historyQuery = query(collection(db, "artifacts/default-app-id/public/data/sensor_history"), orderBy("timestamp", "desc"), limit(10));
-                onSnapshot(historyQuery, (querySnapshot) => {
-                    const historyData = querySnapshot.docs.map(doc => doc.data());
-                    updateAllCharts(historyData.reverse());
-                });
-            }
-            
-            function downloadDataAsCSV() {
-                if (lastHistoryData.length === 0) {
-                    alert("İndirilecek veri bulunmuyor.");
-                    return;
-                }
-                let csvContent = "data:text/csv;charset=utf-8,";
-                csvContent += "Tarih,Sıcaklık (°C),Nem (%),CO2 (ppm),TDS (ppm),Işık (lux)\r\n";
-                lastHistoryData.forEach(row => {
-                    const date = row.timestamp.toDate().toLocaleString('tr-TR');
-                    csvContent += `${date},${row.temperature},${row.humidity},${row.co2},${row.tds_value || ''},${row.light_value || ''}\r\n`;
-                });
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "sensor_verileri.csv");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-            document.getElementById('download-csv-button').addEventListener('click', downloadDataAsCSV);
-
             const navLinks = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('main section');
             window.addEventListener('scroll', () => { 
@@ -636,4 +670,4 @@
         });
     </script>
 </body>
-</html>
+</ht
